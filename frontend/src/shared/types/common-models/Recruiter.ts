@@ -35,6 +35,7 @@ export interface InterviewModel {
     id: string;
     created_at: string;
     date: null | string;
+    start_time: null | string;
     end_time: null | string;
     interview_type: CommonType;
     meeting_link: string | null;

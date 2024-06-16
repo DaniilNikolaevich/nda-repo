@@ -1,11 +1,6 @@
-import { z } from 'zod';
-
 import { API_ROUTES, BaseApi, HTTP_METHOD } from '@/shared/api';
-import { RECRUITER_FLOW_STEPS } from '@/shared/constants/recruiterFlowSteps';
 import { CommentAboutUserModel, RecruitmentProcessModel } from '@/shared/types/common-models';
 import { AdminBookingByIdResponse, AdminBookingType } from '@/shared/types/common-models/Calendar';
-import { CandidateModel } from '@/shared/types/common-models/Candidates';
-import { RecruiterCommentSchema } from '@/shared/validate';
 
 import {
     ChangeAdditionalRecruiterInfoByMeDto,
@@ -25,6 +20,7 @@ const RecruiterService = BaseApi.enhanceEndpoints({
         'RECRUITER_COMMENTS',
         'RECRUITER_HISTORY',
         'RECRUITER_ALLOWED_STEPS',
+        'TEMPLATE_MESSAGE',
     ],
 }).injectEndpoints({
     endpoints: (build) => ({
@@ -197,6 +193,26 @@ const RecruiterService = BaseApi.enhanceEndpoints({
             }),
             providesTags: ['RECRUITER_HISTORY'],
         }),
+        getTemplateMessages: build.query<{ id: string; message: string }[], void>({
+            query: () => `/chat/admin/default-messages`,
+            providesTags: ['TEMPLATE_MESSAGE'],
+        }),
+        createTemplateMessage: build.mutation<void, { message: string }>({
+            query: (body) => ({
+                url: '/chat/admin/default-messages',
+                method: HTTP_METHOD.POST,
+                body,
+            }),
+            invalidatesTags: ['TEMPLATE_MESSAGE'],
+        }),
+        downloadResume: build.query<File, string>({
+            query: (params) => ({
+                method: HTTP_METHOD.GET,
+                url: `/users/${params}/download-cv`,
+                responseHandler: async (response) => window.open(window.URL.createObjectURL(await response.blob())),
+                cache: 'no-cache',
+            }),
+        }),
         selectDateSlotFlow: build.mutation<
             void | null,
             {
@@ -274,8 +290,12 @@ export const {
     useDeclineInterviewByRecruiterMutation,
     useSendCommentAboutCandidateMutation,
     useGetCandidateHistoryFlowQuery,
+    useGetTemplateMessagesQuery,
+    useCreateTemplateMessageMutation,
     useSelectDateSlotFlowMutation,
     useAvailableSlotBySelectedDateQuery,
     useAvailableDatesForInterviewQuery,
     useDeclinedDatesForInterviewMutation,
+    useLazyDownloadResumeQuery,
+    useDownloadResumeQuery,
 } = RecruiterService;

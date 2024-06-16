@@ -1,5 +1,7 @@
 import { Button, Divider, Flex, Paper, Stack, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
+import { Link } from '@phosphor-icons/react/dist/ssr/Link';
+import dayjs from 'dayjs';
 
 import { useSelectedVacancy } from '@/components/widgets/RecruitingProcess/model/useSelectedVacancy';
 import { History } from '@/components/widgets/RecruitingProcess/ui/History';
@@ -99,6 +101,29 @@ export const VacanciesStatusScreen = () => {
         }
     };
 
+    const renderMeetingLink = () => {
+        if (interviewStatus?.meeting_link && interviewStatus?.start_time) {
+            return (
+                <Flex direction='column' gap='var(--size-sm)'>
+                    <Text fw='bold'>Интервью назначено.</Text>
+                    <Text fw='bold'>
+                        {dayjs(interviewStatus?.date).format('DD.MM.YYYY')}, {interviewStatus?.start_time}
+                    </Text>
+                    <Button
+                        component='a'
+                        target='_blank'
+                        variant='subtle'
+                        href={interviewStatus?.meeting_link}
+                        leftSection={<Link weight='bold' />}
+                        w='fit-content'
+                    >
+                        Ссылка на встречу
+                    </Button>
+                </Flex>
+            );
+        }
+    };
+
     return (
         <Paper w='100%'>
             <Stack gap={12}>
@@ -109,6 +134,7 @@ export const VacanciesStatusScreen = () => {
                     <StatusChanger />
                 </Flex>
                 <Stack>
+                    {renderMeetingLink()}
                     {renderStatus()}
                     {renderControls()}
                 </Stack>

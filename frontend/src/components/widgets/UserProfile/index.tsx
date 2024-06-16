@@ -1,8 +1,8 @@
+import { useEffect, useState } from 'react';
 import { Flex, Loader } from '@mantine/core';
 import { useRouter } from 'next/router';
 
 import { ProfileCommentsByCandidate, ProfileSummaryByCandidate } from '@/components/features';
-import { ProfileApplicantContacts, ProfileApplicantInfo } from '@/components/widgets';
 import {
     useGetAllWorkExperienceByMeQuery,
     useGetAllWorkExperienceByUserQuery,
@@ -10,9 +10,16 @@ import {
     useGetEducationByUserQuery,
     useGetMainInfoByMeQuery,
     useGetMainInfoByUserQuery,
+    useIsRecruiter,
 } from '@/services';
 
+import { ProfileApplicantContacts } from './ProfileApplicantContacts';
+import { ProfileApplicantInfo } from './ProfileApplicantInfo';
+
 export const UserProfile = () => {
+    const router = useRouter();
+    const [blocked, setBlocked] = useState(true);
+    const [isRecruiter] = useIsRecruiter();
     const {
         query: { id },
     } = useRouter();
@@ -66,7 +73,15 @@ export const UserProfile = () => {
         isFetchingExperienceById ||
         isFetchingEducationById;
 
-    if (isFetching) {
+    useEffect(() => {
+        if (!isRecruiter) {
+            router.push('/');
+        } else {
+            setBlocked(false);
+        }
+    }, []);
+
+    if (isFetching || blocked) {
         return (
             <Flex align='center' justify='center'>
                 <Loader />

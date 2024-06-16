@@ -16,18 +16,18 @@ import {
 import { useDebouncedCallback } from '@mantine/hooks';
 import { CaretDown } from '@phosphor-icons/react/dist/ssr/CaretDown';
 import { MagnifyingGlass } from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
-import { isEmpty, omitBy, uniq } from 'lodash-es';
+import { isEmpty, omitBy } from 'lodash-es';
 
 import { CandidateProfileCard } from '@/components/entities';
 import { CreateChatWithCandidateButton, InviteApplicantForVacancy } from '@/components/features';
 import { useCitiesList } from '@/components/features/VacanciesAsideFilters/VacanciesRegionFilter/model';
-import { RegionFilter } from '@/components/widgets/ProfileCandidates/ui/RegionFilter';
-import { SalaryFilter } from '@/components/widgets/ProfileCandidates/ui/SalaryFilter';
-import vacancies from '@/pages/vacancies';
 import { useSelectCandidateForJob } from '@/services/RecruiterService/hooks';
 import { useGetAllCandidatesQuery, useGetAllVacanciesForRecruiterQuery } from '@/services/VacanciesService';
-import { CandidateParams } from '@/services/VacanciesService/dto';
+import type { CandidateParams } from '@/services/VacanciesService/dto';
 import { useGetCities } from '@/shared/hooks';
+
+import { RegionFilter } from './ui/RegionFilter';
+import { SalaryFilter } from './ui/SalaryFilter';
 
 const TYPES = [
     {
@@ -102,8 +102,6 @@ export const ProfileCandidates = () => {
     useEffect(() => {
         setRegion((prev) => [...prev, ...(additionalCities?.map((el) => el.id) ?? [])]);
     }, [additionalCities]);
-
-    console.log(data);
 
     return (
         <Flex gap={60} py={30}>

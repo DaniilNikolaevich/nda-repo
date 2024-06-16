@@ -14,7 +14,7 @@ import { useGetVacanciesList } from '@/services/VacanciesService/hooks';
 import { getDeclinations } from '@/shared/utils';
 
 export const VacanciesBlock = () => {
-    const { data, totalCount, isLoading } = useGetVacanciesList();
+    const { data, totalCount, isLoading, tab } = useGetVacanciesList();
 
     const showVacanciesCount = totalCount && !isLoading;
     const vacanciesCount = showVacanciesCount
@@ -25,12 +25,14 @@ export const VacanciesBlock = () => {
         <Paper p='var(--size-xl)' radius='var(--size-md)'>
             <VacanciesTabTypes />
             <Flex gap={60}>
-                <VacanciesAsideFilters />
+                {tab !== 'my' && <VacanciesAsideFilters />}
                 <Stack w='100%' gap={0}>
-                    <Flex mb='var(--size-lg)' w='100%' h='fit-content' gap='var(--size-sm)'>
-                        <EntitySearchBar />
-                        <VacanciesSelectType />
-                    </Flex>
+                    {tab !== 'my' && (
+                        <Flex mb='var(--size-lg)' w='100%' h='fit-content' gap='var(--size-sm)'>
+                            <EntitySearchBar />
+                            <VacanciesSelectType />
+                        </Flex>
+                    )}
 
                     <Title mb='var(--size-lg)' order={4}>
                         {isLoading ? 'Ищем вакансии...' : null}&nbsp;

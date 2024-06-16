@@ -2,7 +2,13 @@ import type { ReactNode } from 'react';
 import { Title } from '@mantine/core';
 import { useRouter } from 'next/router';
 
-import { CompanyNewsCabinet, ProfileCandidates, RecruitingProcess, VacanciesBoard } from '@/components/widgets';
+import {
+    AIProfiles,
+    CompanyNewsCabinet,
+    ProfileCandidates,
+    RecruitingProcess,
+    VacanciesBoard,
+} from '@/components/widgets';
 import { SelectedVacancyContextProvider } from '@/components/widgets/RecruitingProcess/model/useSelectedVacancy';
 import { BaseLayout } from '@/layouts';
 import { RecruiterTabsLayout } from '@/layouts/RecruiterTabsLayout';
@@ -17,7 +23,6 @@ type TabsPagesType = {
 };
 
 const TabsPages: TabsPagesType = {
-    dashboard: <div>Дашборд</div>,
     recruiting: (
         <SelectedVacancyContextProvider>
             <RecruitingProcess />
@@ -26,6 +31,7 @@ const TabsPages: TabsPagesType = {
     vacancies: <VacanciesBoard />,
     calendar: <Calendar />,
     news: <CompanyNewsCabinet />,
+    aiProfiles: <AIProfiles />,
     profiles: <ProfileCandidates />,
 };
 

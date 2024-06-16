@@ -1,4 +1,7 @@
+import queryString from 'query-string';
+
 import { API_ROUTES, BaseApi, HTTP_METHOD } from '@/shared/api';
+import { VacancyModel } from '@/shared/types/common-models';
 import { CandidateModel } from '@/shared/types/common-models/Candidates';
 
 import {
@@ -82,6 +85,18 @@ const VacanciesService = BaseApi.enhanceEndpoints({
             }),
             invalidatesTags: ['GET_ALL_VACANCIES', 'MY_CHATS'],
         }),
+        getAIVacancies: build.query<CandidateModel[], { params: VacanciesParamsDTO; vacancy_id: string }>({
+            query: ({ vacancy_id, params }) => ({
+                url: API_ROUTES.getAIVacancies(vacancy_id),
+                params,
+            }),
+        }),
+        getSuitableVacancies: build.query<VacancyModel[], VacanciesParamsDTO>({
+            query: (params) => ({
+                url: API_ROUTES.suitableVacancies,
+                params,
+            }),
+        }),
     }),
 });
 
@@ -95,4 +110,6 @@ export const {
     useDublicateVacancyMutation,
     useGetAllCandidatesQuery,
     useApplyForJobMutation,
+    useGetAIVacanciesQuery,
+    useGetSuitableVacanciesQuery,
 } = VacanciesService;

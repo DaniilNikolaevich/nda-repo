@@ -49,7 +49,7 @@ export const useAuthorizationModel = () => {
         setAuthorization(true);
         const role = (jwtDecode(data.access_token) as { role: number }).role === 2 ? 'recruiter' : 'user';
         STORAGE.setRole(role);
-        router.push(`/cabinet/${role}${role === 'recruiter' ? '/settings' : '/profile'}`);
+        router.push(`${role === 'recruiter' ? '/recruiter/process/recruiting' : '/vacancies'}`);
     }, [data]);
 
     useEffect(() => {
@@ -58,7 +58,7 @@ export const useAuthorizationModel = () => {
         if (token) {
             const role = (jwtDecode(token) as { role: number }).role === 2 ? 'recruiter' : 'user';
             STORAGE.setRole(role);
-            router.push(`/cabinet/${role}${role === 'recruiter' ? '/settings' : '/profile'}`);
+            router.push(`${role === 'recruiter' ? '/recruiter/process/recruiting' : '/vacancies'}`);
         } else {
             setAuthorization(false);
         }

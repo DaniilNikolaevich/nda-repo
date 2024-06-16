@@ -19,7 +19,7 @@ export function RecruiterTabsLayout({ children }: PropsWithChildren) {
     };
 
     return (
-        <Paper radius='var(--size-md)' w='100%' px={30}>
+        <Paper radius='var(--size-md)' w='100%' px={30} mih='calc(100vh - 80px)'>
             <Tabs
                 orientation='horizontal'
                 radius='xs'

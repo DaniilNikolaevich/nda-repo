@@ -19,6 +19,8 @@ export const API_ROUTES = {
     tags: '/news/tags',
     subscribe: '/news/subscribe',
     recruiterFlowSteps: '/base/recruiter-flow-steps',
+    suitableVacancies: '/vacancies/suitable-vacancies',
+    getAIVacancies: (vacancy_id: string) => `/vacancies/${vacancy_id}/suitable-candidates`,
     getCommentsAboutUser: (user_id: string) => `/users/${user_id}/comments`,
     recruiterFlows: (vacancy_id: string) => `/vacancies/${vacancy_id}/recruiter-flows`,
     getArticleComments: (article_id: string) => `${API_ROUTES.news}/${article_id}/comments`,

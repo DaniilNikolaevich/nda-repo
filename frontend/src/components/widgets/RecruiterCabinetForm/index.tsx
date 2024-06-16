@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Box, Flex, Loader } from '@mantine/core';
+import { Box, Flex, Loader, Textarea } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { zodResolver } from 'mantine-form-zod-resolver';
 
@@ -8,14 +8,15 @@ import { CabinetLayout } from '@/layouts';
 import {
     useChangeAdditionalInfoRecruiterByMeMutation,
     useChangeMainInfoRecruiterByMeMutation,
+    useCreateTemplateMessageMutation,
     useGetInfoRecruiterByMeQuery,
+    useGetTemplateMessagesQuery,
 } from '@/services';
-import { RecruiterInfo } from '@/services/RecruiterService/dto';
 import { FormContainer } from '@/shared/ui';
 import { RecruiterCabinetSchema } from '@/shared/validate';
 
 import { RecruiterCabinetFormProvider, useRecruiterCabinetForm } from './model';
-import { Controls, FormCategoryName, GeneralInput, InputEmail, PhoneInput } from './ui';
+import { Controls, FormCategoryName, GeneralInput, GeneralTextArea, InputEmail, PhoneInput } from './ui';
 
 export const RecruiterCabinetForm = () => {
     const { data: recruiterInfo, isLoading: isFetchingInfo } = useGetInfoRecruiterByMeQuery();
@@ -23,6 +24,8 @@ export const RecruiterCabinetForm = () => {
         useChangeAdditionalInfoRecruiterByMeMutation();
     const [changeMainInfo, { isSuccess: isSuccessMainInfo, isError: isErrorMainInfo }] =
         useChangeMainInfoRecruiterByMeMutation();
+    const { data: defaultMessages } = useGetTemplateMessagesQuery();
+    const [createTemplateMessage] = useCreateTemplateMessageMutation();
 
     const form = useRecruiterCabinetForm({
         mode: 'uncontrolled',
@@ -35,6 +38,7 @@ export const RecruiterCabinetForm = () => {
             email: null,
             position: '',
             department: '',
+            message: '',
         },
         validate: zodResolver(RecruiterCabinetSchema),
     });
@@ -49,9 +53,10 @@ export const RecruiterCabinetForm = () => {
                 phone: recruiterInfo.phone,
                 position: recruiterInfo.position,
                 surname: recruiterInfo.user?.surname,
+                message: defaultMessages?.[0]?.message ?? '',
             });
         }
-    }, [recruiterInfo]);
+    }, [recruiterInfo, defaultMessages]);
 
     const onSubmit = form.onSubmit((values) => {
         changeMainInfo({
@@ -64,6 +69,9 @@ export const RecruiterCabinetForm = () => {
             email: values.email ?? '',
             phone: values.phone ?? '',
             position: values.position ?? '',
+        });
+        createTemplateMessage({
+            message: values?.message ?? '',
         });
     });
 
@@ -111,6 +119,11 @@ export const RecruiterCabinetForm = () => {
                                     name='department'
                                     label='Подразделение'
                                     placeholder='Введите подразделение'
+                                />
+                                <GeneralTextArea
+                                    label='Шаблон приветствия в чате'
+                                    placeholder='Напишите текст для автоматического сообщения при создании чата'
+                                    name='message'
                                 />
                                 <Controls />
                             </Flex>

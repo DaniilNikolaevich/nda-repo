@@ -2,11 +2,12 @@ import { isEmpty, omitBy } from 'lodash-es';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
-import { useGetAllVacanciesQuery } from './index';
+import { useGetAllVacanciesQuery, useGetSuitableVacanciesQuery } from './index';
 
 export const useGetVacanciesList = () => {
     const { pathname } = useRouter();
     const searchParams = useSearchParams();
+    const tab = searchParams.get('activeTab');
     const page = searchParams.get('page') ?? 1;
     const search = searchParams.get('search') ?? '';
     const salary__gte = searchParams.get('salary__gte') ?? '';
@@ -38,15 +39,20 @@ export const useGetVacanciesList = () => {
     );
 
     const { data, isLoading, isFetching } = useGetAllVacanciesQuery(params, {
-        skip: pathname !== '/vacancies',
+        skip: pathname !== '/vacancies' || tab === 'my',
+        refetchOnMountOrArgChange: true,
     });
 
-    const tab = searchParams.get('activeTab');
+    const { data: suitableVacancies } = useGetSuitableVacanciesQuery(params, {
+        skip: pathname !== '/vacancies' || tab !== 'my',
+        refetchOnMountOrArgChange: true,
+    });
 
     return {
-        data: data?.payload,
-        totalPages: data?.total_pages,
-        totalCount: data?.total_count,
+        data: tab === 'my' ? suitableVacancies : data?.payload,
+        totalPages: tab === 'my' ? 1 : data?.total_pages,
+        totalCount: tab === 'my' ? suitableVacancies?.length : data?.total_count,
         isLoading: isLoading || isFetching,
+        tab,
     };
 };

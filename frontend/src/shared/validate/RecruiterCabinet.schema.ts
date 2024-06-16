@@ -8,4 +8,5 @@ export const RecruiterCabinetSchema = z.object({
     email: z.string().email({ message: 'Неверный email' }).nullable(),
     position: z.string().nullable(),
     department: z.string().nullable(),
+    message: z.string().nullable(),
 });
