@@ -1,0 +1,8 @@
+package.json
+/build
+node_modules
+webpack.config.ts
+src/app
+vite.config.ts
+*.d.ts
+ssr.config.ts

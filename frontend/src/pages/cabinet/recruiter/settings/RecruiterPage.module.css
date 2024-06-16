@@ -1,0 +1,15 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin: auto;
+  padding: 40px 0;
+  height: 100vh;
+  max-width: 1096px;
+}
+
+h4.title {
+  font: var(--font-24-header);
+  letter-spacing: 0.1px;
+}

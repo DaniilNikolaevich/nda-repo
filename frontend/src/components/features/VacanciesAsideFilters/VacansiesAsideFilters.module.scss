@@ -1,0 +1,7 @@
+.root {
+  --label-fz: 20px;
+
+  @include lg-block {
+    --label-fz: 16px;
+  }
+}

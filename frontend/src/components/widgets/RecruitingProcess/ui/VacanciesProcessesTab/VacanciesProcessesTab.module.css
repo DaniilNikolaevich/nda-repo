@@ -1,0 +1,21 @@
+.root {
+  --tab-border-color: transparent !important;
+
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+  padding-block: var(--size-xxs);
+}
+
+.tab {
+  border: 0;
+}
+
+.tab span {
+  font-size: 14px !important;
+}
+
+.tab[aria-selected="true"] {
+  border-radius: var(--size-xxs);
+  font-weight: 600;
+  background-color: var(--mantine-color-gray-2);
+}

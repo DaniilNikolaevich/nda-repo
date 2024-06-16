@@ -1,0 +1,20 @@
+.target {
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.logout {
+  border: none;
+  width: 100%;
+  font-weight: 400;
+  text-align: left;
+  background-color: transparent;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--mantine-color-gray-9);
+    background-color: var(--mantine-color-gray-1);
+  }
+}

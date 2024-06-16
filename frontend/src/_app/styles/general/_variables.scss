@@ -1,0 +1,58 @@
+:root {
+  --size-xxs: 4px;
+  --size-xs: 8px;
+  --size-sm: 12px;
+  --size-md: 16px;
+  --size-lg: 20px;
+  --size-xl: 24px;
+  --size-2xl: 28px;
+  --size-3xl: 32px;
+  --size-4xl: 36px;
+  --size-5xl: 40px;
+}
+
+:root {
+  --offset-xxs: 4px;
+  --offset-xs: 8px;
+  --offset-sm: 12px;
+  --offset-md: 16px;
+  --offset-lg: 20px;
+  --offset-xl: 24px;
+  --offset-2xl: 28px;
+  --offset-3xl: 32px;
+  --offset-4xl: 36px;
+  --offset-5xl: 40px;
+}
+
+:root {
+  --font-fallback: "Verdana", "Roboto", sans-serif;
+  --font-base: "Inter", var(--font-fallback);
+  --font-12: 400 12px / 14px var(--font-base);
+  --font-14: 400 14px / 18px var(--font-base);
+  --font-16: 400 16px / 20px var(--font-base);
+  --font-20: 400 20px / 25px var(--font-base);
+  --font-22: 400 20px / 25px var(--font-base);
+  --font-24-header: 700 24px / 28px var(--font-base);
+  --font-14-medium: 500 14px / 18px var(--font-base);
+  --font-14-bold: 600 14px / 18px var(--font-base);
+  --font-16-medium: 500 16px / 20px var(--font-base);
+  --font-17-medium: 500 17px / 21px var(--font-base);
+  --font-18-medium: 500 18px / 22px var(--font-base);
+  --font-19: 400 19px / 23px var(--font-base);
+  --font-22-medium: 500 22px / 28px var(--font-base);
+  --font-28-medium: 500 28px / 35px var(--font-base);
+  --font-28-bold: 600 28px / 35px var(--font-base);
+  --font-profile-heading-medium: 500 32px / 40px var(--font-base);
+  --font-heading-medium: 500 60px / 75px var(--font-base);
+}
+
+/* System colors */
+
+:root {
+  --general-color-background-neutral: #f8f9fa;
+  --accent: var(--mantine-color-indigo-7);
+  --text-primary: var(--mantine-color-dark-9);
+  --text-secondary: var(--mantine-color-dark-6);
+  --text-tertiary: var(--mantine-color-dark-2);
+  --separator: var(--mantine-color-gray-3);
+}

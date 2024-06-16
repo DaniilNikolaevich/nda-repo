@@ -1,0 +1,27 @@
+@import "@syncfusion/ej2-base/styles/material.css";
+@import "@syncfusion/ej2-buttons/styles/material.css";
+@import "@syncfusion/ej2-layouts/styles/material.css";
+@import "@syncfusion/ej2-dropdowns/styles/material.css";
+@import "@syncfusion/ej2-inputs/styles/material.css";
+@import "@syncfusion/ej2-navigations/styles/material.css";
+@import "@syncfusion/ej2-popups/styles/material.css";
+@import "@syncfusion/ej2-react-kanban/styles/material.css";
+
+@import "@mantine/core/styles.css";
+@import "@mantine/dates/styles.css";
+@import "@mantine/nprogress/styles.css";
+@import "@mantine/notifications/styles.css";
+@import "@mantine/dropzone/styles.css";
+@import "@mantine/tiptap/styles.css";
+
+@import "vendor/normalize";
+@import "general/mixins";
+@import "general/fonts";
+@import "general/variables";
+@import "general/scaffoldings";
+
+/* NProgress */
+@import "vendor/nprogress";
+
+/* Mantine Rewrite */
+@import "general/fonts";

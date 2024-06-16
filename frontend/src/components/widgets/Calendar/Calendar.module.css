@@ -1,0 +1,91 @@
+.root {
+  padding-top: 20px;
+
+  :global {
+    table {
+      border-radius: 8px !important;
+    }
+
+    .fc-theme-standard th,
+    .fc-theme-standard td {
+      border-color: #e8e8e8 !important;
+    }
+
+    .fc .fc-daygrid-day-top {
+      flex-direction: row !important;
+    }
+
+    td,
+    th {
+      text-align: left !important;
+      color: #969696 !important;
+    }
+
+    .fc-toolbar-chunk > .fc-button-group:has(.fc-prev-button) {
+      display: flex !important;
+      background-color: transparent !important;
+      gap: 12px !important;
+
+      .fc-prev-button,
+      .fc-next-button {
+        border: none !important;
+        border-radius: 8px !important;
+        background-color: #edf2ff !important;
+
+        .fc-icon {
+          color: #4263eb !important;
+        }
+      }
+    }
+
+    .fc-settingsShedule-button {
+      border-color: transparent;
+      border-radius: 8px;
+      color: #fff;
+      background-color: #4263eb;
+
+      &:hover {
+        border-color: transparent;
+        background-color: #4263eb;
+        cursor: pointer;
+      }
+    }
+
+    .fc-button-group {
+      border-radius: 8px !important;
+      color: #000 !important;
+      background-color: #edf2ff !important;
+
+      .fc-timeGridDay-button,
+      .fc-timeGridWeek-button,
+      .fc-dayGridMonth-button {
+        border-color: transparent !important;
+        color: #000 !important;
+        background-color: #edf2ff !important;
+
+        &:focus {
+          border-color: transparent !important;
+          box-shadow: none !important;
+        }
+      }
+
+      .fc-button-active {
+        border-color: transparent !important;
+        color: #000 !important;
+        background-color: #fff !important;
+
+        &:focus {
+          border-color: transparent !important;
+          box-shadow: none !important;
+        }
+      }
+    }
+  }
+}
+
+.eventInfo {
+  &:hover {
+    background: transparent !important;
+    cursor: pointer;
+  }
+}

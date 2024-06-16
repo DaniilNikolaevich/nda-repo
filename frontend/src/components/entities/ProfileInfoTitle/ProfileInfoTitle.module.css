@@ -1,0 +1,8 @@
+.chip {
+  label {
+    padding: 4px 12px;
+    color: #000 !important;
+    background: #edf2ff !important;
+    cursor: default;
+  }
+}

@@ -1,0 +1,8 @@
+.root > div {
+  width: calc(100% + 8px);
+}
+
+.aside {
+  border-right: 1px solid var(--separator);
+  height: calc(100vh - 60px);
+}

@@ -1,0 +1,7 @@
+a.root {
+  transition: color 0.3s ease-in-out;
+}
+
+a.root:hover {
+  color: var(--accent) !important;
+}

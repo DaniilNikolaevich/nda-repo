@@ -1,0 +1,13 @@
+.root {
+  border-radius: var(--size-sm);
+  padding: var(--size-lg);
+  color: var(--text-primary);
+}
+
+.title {
+  transition: color 0.3s ease-in-out;
+}
+
+.root:is(:hover, :focus-visible) .title {
+  color: var(--accent);
+}

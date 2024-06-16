@@ -1,0 +1,19 @@
+pre-commit:
+    parallel: true
+    commands:
+        build:
+            run: npm run build
+        eslint:
+            glob: '*.{ts,tsx,js,jsx}'
+            run: npx eslint --ext ts --ext tsx --max-warnings=20 {staged_files}
+        stylelint:
+            glob: '*.{css,scss}'
+            run: npx stylelint --max-warnings=20 {staged_files}
+        prettier:
+            run: npx prettier --write {staged_files} && git add {staged_files}
+
+commit-msg:
+    parallel: true
+    commands:
+        lint-commit-msg:
+            run: npx commitlint --edit

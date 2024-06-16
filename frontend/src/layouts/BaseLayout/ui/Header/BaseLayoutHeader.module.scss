@@ -1,0 +1,20 @@
+.root {
+  display: flex;
+  align-items: center;
+  padding: var(--size-sm) var(--size-lg);
+}
+
+.logo {
+  display: block;
+  margin-right: var(--size-lg);
+  height: 44px;
+
+  svg {
+    width: inherit;
+    height: inherit;
+  }
+
+  @include md-block {
+    margin-right: 80px;
+  }
+}

@@ -1,0 +1,10 @@
+.link {
+  margin-right: var(--size-5xl);
+  font-size: var(--mantine-font-size-md);
+  color: var(--mantine-color-gray-8);
+}
+
+.active {
+  font-weight: 600;
+  color: var(--mantine-color-indigo-8);
+}

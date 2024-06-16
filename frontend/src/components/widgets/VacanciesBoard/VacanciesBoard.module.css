@@ -1,0 +1,49 @@
+.root {
+  :global {
+    .e-kanban .e-kanban-table {
+      border-collapse: collapse !important;
+    }
+
+    .e-hide {
+      display: none !important;
+    }
+
+    .e-kanban-table td,
+    .e-kanban-table th {
+      border-right: 1px solid #ccc !important;
+      border-left: 1px solid #ccc !important;
+    }
+
+    .e-kanban-table tr th {
+      border-top: 1px solid #ccc !important;
+      border-radius: 8px 8px 0 0 !important;
+      padding: 16px !important;
+    }
+
+    .e-kanban-table tbody tr:first-child td {
+      border-radius: 0 0 8px 8px !important;
+    }
+
+    .e-kanban-table tr:last-child td {
+      border-bottom: 1px solid #ccc !important;
+    }
+
+    .e-card-wrapper {
+      padding: 0 16px 16px !important;
+      background: #fff !important;
+
+      .e-card {
+        border-radius: 8px;
+        background: #f8f9fa !important;
+      }
+    }
+
+    .e-content-cells {
+      background: #fff !important;
+    }
+
+    .e-header-cells {
+      background: #fff !important;
+    }
+  }
+}
