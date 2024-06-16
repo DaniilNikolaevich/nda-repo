@@ -1,0 +1,12 @@
+{
+  "token_hmac_secret_key": "NUuBG25DuaNtSnPowsSwxq65a5yvfZJLzQ4kmg4tDKQ8GkQYz7Rs3eQvHvdfuKud",
+  "admin_password": "eg26aLgHMsTN7Ghv",
+  "admin_secret": "eg26aLgHMsTN7Ghv",
+  "api_key": "3NFds6UJ9bjE4rpkyv6Q9rhqv3N43apt",
+  "admin": true,
+  "allowed_origins": [
+    "https://peopleflow.ru", "http://127.0.0.1:8000", "http://127.0.0.1:3000",  "http://127.0.0.1", "http://localhost:3000", "http://localhost:8000", "http://localhost"
+  ],
+  "allow_subscribe_for_client": true,
+  "port": "8000"
+}
