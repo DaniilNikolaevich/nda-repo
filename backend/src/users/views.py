@@ -379,10 +379,12 @@ class UserCommentView(APIView):
     def post(self, request, *args, **kwargs):
         author = kwargs.get('user')
         user = self.target_user
-        request.data['author'] = str(author.id)
-        request.data['user'] = str(user.id)
 
-        serializer = UserCommentWriteSerializer(data=request.data)
+        mutable_data = request.data.copy()
+        mutable_data['author'] = str(author.id)
+        mutable_data['user'] = str(user.id)
+
+        serializer = UserCommentWriteSerializer(data=mutable_data)
         serializer.is_valid(raise_exception=True)
         serializer.save(user=self.target_user)
         return Response(
