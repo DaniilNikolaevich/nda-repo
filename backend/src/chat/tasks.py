@@ -52,7 +52,7 @@ def send_message_to_centrifugo(self, channel: str, author_id, message, headers=N
                 "title": "У вас новое сообщение на платформе!",
                 "greeting": "Здравствуйте!",
                 "main_text": "У вас новое сообщение на платформе!",
-                "bottom_text": "С уважением, команда Reksoft",
+                "bottom_text": "С уважением, команда",
                 "button_text": "Перейти",
                 "button_link": f"{settings.FRONTEND_BASE_URL}",
             }
