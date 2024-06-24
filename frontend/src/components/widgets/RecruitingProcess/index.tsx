@@ -1,6 +1,6 @@
 import { Box, Divider, Flex, Paper, Title } from '@mantine/core';
 
-import { SelectedVacancyContextProvider, useSelectedVacancy } from './model/useSelectedVacancy';
+import { useSelectedVacancy } from './model/useSelectedVacancy';
 import {
     VacanciesProcessesTab,
     VacanciesStatusScreen,

@@ -1,3 +1,4 @@
+import { ChatModel } from '@/shared/types/common-models/Chat';
 import { CommonType } from '@/shared/types/common-models/common';
 import type { RecruiterModel } from '@/shared/types/common-models/Recruiter';
 
@@ -9,6 +10,7 @@ export interface Skill {
 
 export interface VacancyModel {
     id: string;
+    views_num: number;
     position: {
         id: string;
         is_verified: boolean;
@@ -43,7 +45,12 @@ export interface VacancyModel {
     description: string;
     skills: Skill[];
     benefits: null | string;
+    candidate_response?: {
+        is_responded: boolean;
+        response_time: string;
+    };
     responsible_recruiter?: RecruiterModel;
+    chat?: ChatModel;
 }
 
 export interface VacancyInfoRequest {

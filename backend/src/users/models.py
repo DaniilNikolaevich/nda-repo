@@ -128,6 +128,26 @@ class User(BaseModel):
 
         return True
 
+    def get_responded_vacancies(self):
+        from vacancies.models import RecruiterFlow, CandidateFlow, Vacancy
+        candidate_flows = CandidateFlow.objects.filter(
+            recruiter_flow__candidate=self,
+            step__in=[RecruiterFlow.Step.APPLICANT_RESPONSE,
+                      RecruiterFlow.Step.GENERAL_INTERVIEW]).order_by('created_at')
+
+        vacancies = Vacancy.objects.filter(id__in=candidate_flows.values_list('recruiter_flow__vacancy__id', flat=True))
+
+        existing_flows = []
+        vacancies_dict = {}
+
+        for candidate_flow in candidate_flows:
+            recruiter_flow = str(candidate_flow.recruiter_flow.id)
+            if recruiter_flow not in existing_flows:
+                vacancies_dict[str(candidate_flow.recruiter_flow.vacancy.id)] = candidate_flow.created_at
+                existing_flows.append(recruiter_flow)
+
+        return vacancies, vacancies_dict
+
     @property
     def is_admin(self):
         return self.role == User.Role.ADMIN

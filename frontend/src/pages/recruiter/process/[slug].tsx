@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import {
     AIProfiles,
     CompanyNewsCabinet,
+    Dashboard,
     ProfileCandidates,
     RecruitingProcess,
     VacanciesBoard,
@@ -13,7 +14,7 @@ import { SelectedVacancyContextProvider } from '@/components/widgets/RecruitingP
 import { BaseLayout } from '@/layouts';
 import { RecruiterTabsLayout } from '@/layouts/RecruiterTabsLayout';
 import Calendar from '@/pages/calendar';
-import { VacanciesTabTypes } from '@/shared/types';
+import type { VacanciesTabTypes } from '@/shared/types';
 import { ProtectedRoute } from '@/shared/ui';
 
 import s from './ProcessPage.module.css';
@@ -23,6 +24,11 @@ type TabsPagesType = {
 };
 
 const TabsPages: TabsPagesType = {
+    dashboard: (
+        <SelectedVacancyContextProvider>
+            <Dashboard />
+        </SelectedVacancyContextProvider>
+    ),
     recruiting: (
         <SelectedVacancyContextProvider>
             <RecruitingProcess />

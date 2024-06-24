@@ -25,6 +25,7 @@ const VacanciesService = BaseApi.enhanceEndpoints({
                 url: API_ROUTES.vacancies,
                 params,
             }),
+            providesTags: ['GET_ALL_VACANCIES'],
         }),
         getAllVacanciesForRecruiter: build.query<VacanciesResponse, VacanciesForRecruiterParamsDTO>({
             query: (params) => ({
@@ -64,7 +65,7 @@ const VacanciesService = BaseApi.enhanceEndpoints({
             }),
             invalidatesTags: ['GET_ALL_VACANCIES'],
         }),
-        dublicateVacancy: build.mutation<void | null, ChangeVacancyDto>({
+        duplicateVacancy: build.mutation<void | null, ChangeVacancyDto>({
             query: ({ vacancy_id, ...body }) => ({
                 url: `/vacancies/${vacancy_id}/duplicate`,
                 method: HTTP_METHOD.POST,
@@ -97,6 +98,37 @@ const VacanciesService = BaseApi.enhanceEndpoints({
                 params,
             }),
         }),
+        getCandidateRespondedVacancies: build.query<{ payload: VacancyModel[] }, void>({
+            query: () => ({
+                url: `/vacancies/candidate-responded-vacancies`,
+            }),
+        }),
+        getCountVacanciesByStatuses: build.query<Array<{ name: string; value: number; color: string }>, void | null>({
+            query: () => ({
+                url: '/dashboard/vacancies-status-distribution',
+            }),
+        }),
+        getAvgTimeByVacancies: build.query<{ days: number; hours: number }, void | null>({
+            query: () => ({
+                url: '/dashboard/avg-vacancies-response',
+            }),
+        }),
+        getCountViewByVacancies: build.query<
+            {
+                data: Array<Record<'date' | any, string | number>>;
+                total_views: number;
+            },
+            void | null
+        >({
+            query: () => ({
+                url: '/dashboard/vacancies-views-count',
+            }),
+        }),
+        getSimilarVacancies: build.query<VacancyModel[], string>({
+            query: (vacancy_id) => ({
+                url: `/vacancies/${vacancy_id}/similar-vacancies`,
+            }),
+        }),
     }),
 });
 
@@ -107,9 +139,14 @@ export const {
     useChangeVacancyStatusMutation,
     useCreateVacancyMutation,
     useChangeVacancyMutation,
-    useDublicateVacancyMutation,
+    useDuplicateVacancyMutation,
     useGetAllCandidatesQuery,
     useApplyForJobMutation,
     useGetAIVacanciesQuery,
     useGetSuitableVacanciesQuery,
+    useGetCandidateRespondedVacanciesQuery,
+    useGetCountVacanciesByStatusesQuery,
+    useGetAvgTimeByVacanciesQuery,
+    useGetCountViewByVacanciesQuery,
+    useGetSimilarVacanciesQuery,
 } = VacanciesService;

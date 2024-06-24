@@ -1,11 +1,10 @@
 import type { PropsWithChildren } from 'react';
 import { AppShell } from '@mantine/core';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { useAuthorization } from '@/services';
-
-import { Header } from './ui/Header';
+const Header = dynamic(() => import('./ui/Header'), { ssr: false });
 
 interface BaseLayout {
     title?: string;

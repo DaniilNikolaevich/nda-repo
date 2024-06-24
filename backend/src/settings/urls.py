@@ -15,8 +15,8 @@ urlpatterns = [
         path('meeting-link', MeetingLinkView.as_view()),
         path('chat/', include('chat.urls')),
         path('calendars/', include('calendars.urls')),
+        path('dashboard/', include('dashboard.urls'))
     ])),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
-

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Container, Flex, Grid, Tabs, Title } from '@mantine/core';
+import { type ReactNode, useState } from 'react';
+import { Container, Flex, Tabs, Title } from '@mantine/core';
 
 import {
     ContactsForm,
@@ -10,12 +10,13 @@ import {
 } from '@/components/widgets';
 import { BaseLayout } from '@/layouts';
 import { tabsConfig } from '@/shared/constants';
-import { TabTypes } from '@/shared/types';
+import { useIsLaptop } from '@/shared/hooks/media';
+import type { TabTypes } from '@/shared/types';
 
 import s from './SettingsPage.module.css';
 
 type TabsPagesType = {
-    [key in TabTypes]?: React.ReactNode;
+    [key in TabTypes]?: ReactNode;
 };
 
 const TabsPages: TabsPagesType = {
@@ -26,6 +27,7 @@ const TabsPages: TabsPagesType = {
 };
 
 function SettingsPage() {
+    const isDesktop = useIsLaptop();
     const [tab, setTab] = useState<TabTypes>('data');
 
     const handleTabChange = (e: string | null) => {
@@ -34,46 +36,35 @@ function SettingsPage() {
 
     return (
         <BaseLayout title='Настройки личного кабинета соискателя'>
-            <Container miw={1100}>
+            <Container>
                 <Flex mb={40}>
                     <Title className={s.title} order={4}>
                         Настройки профиля
                     </Title>
                 </Flex>
-                <Grid gutter='var(--size-lg)' pos='relative'>
-                    <Grid.Col
-                        span={8}
-                        pl={30}
-                        pr={30}
-                        pb={40}
-                        w='fit-content'
-                        style={{ borderRadius: '16px', backgroundColor: 'white' }}
+                <Flex gap='var(--size-lg)' direction={isDesktop ? 'row-reverse' : 'column'} pos='relative'>
+                    <Newsletter />
+
+                    <Tabs
+                        bg='var(--mantine-color-white)'
+                        w='100%'
+                        orientation='horizontal'
+                        defaultValue={tab}
+                        value={tab}
+                        variant='default'
+                        onChange={handleTabChange}
+                        style={{ borderRadius: 'var(--size-md)' }}
                     >
-                        <Tabs
-                            w='100%'
-                            orientation='horizontal'
-                            defaultValue={tab}
-                            radius='xs'
-                            pt={12}
-                            pb={12}
-                            value={tab}
-                            variant='default'
-                            onChange={handleTabChange}
-                        >
-                            <Tabs.List>
-                                {tabsConfig.map(({ value, content }) => (
-                                    <Tabs.Tab key={value} value={value}>
-                                        {content}
-                                    </Tabs.Tab>
-                                ))}
-                            </Tabs.List>
-                            {TabsPages[tab]}
-                        </Tabs>
-                    </Grid.Col>
-                    <Grid.Col span={4} pt={0}>
-                        <Newsletter />
-                    </Grid.Col>
-                </Grid>
+                        <Tabs.List>
+                            {tabsConfig.map(({ value, content }) => (
+                                <Tabs.Tab py='var(--size-lg)' key={value} value={value}>
+                                    {content}
+                                </Tabs.Tab>
+                            ))}
+                        </Tabs.List>
+                        {TabsPages[tab]}
+                    </Tabs>
+                </Flex>
             </Container>
         </BaseLayout>
     );

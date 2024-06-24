@@ -1,28 +1,21 @@
 import { useEffect, useState } from 'react';
-import { Box, Flex, Loader, LoadingOverlay } from '@mantine/core';
+import { Box, Flex, Loader } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
-import dayjs from 'dayjs';
 import { zodResolver } from 'mantine-form-zod-resolver';
 import { useRouter } from 'next/router';
-import { z } from 'zod';
 
-import { UploadCropAvatar } from '@/components/entities';
 import { CabinetLayout } from '@/layouts';
 import {
-    useChangeMeInfoMutation,
     useGetCategoriesDictionaryQuery,
     useGetCitiesDictionaryQuery,
     useGetCountryTypesDictionaryQuery,
     useGetDepartmentsDictionaryQuery,
     useGetEmploymentTypesDictionaryQuery,
     useGetInfoRecruiterByMeQuery,
-    useGetMainInfoByMeQuery,
     useGetPositionDictionaryQuery,
     useGetSchedulesDictionaryQuery,
     useGetSkillsDictionaryQuery,
-    useGetTemplatesOfBenefitsDictionaryQuery,
-    useGetTemplatesOfTasksDictionaryQuery,
 } from '@/services';
 import {
     useChangeVacancyMutation,
@@ -35,7 +28,7 @@ import { VacancyFormSchema } from '@/shared/validate';
 import { useVacancyForm, VacancyFormProvider } from './model';
 import { Controls, FormCategoryName, GeneralInput, GeneralTextArea, InputEmail, KeySkills, SelectInput } from './ui';
 
-export const VacancyForm = ({ isEditMode }: { isEditMode?: boolean }) => {
+export const VacancyForm = () => {
     const form = useVacancyForm({
         mode: 'uncontrolled',
         name: 'vacancy-form',
@@ -94,8 +87,6 @@ export const VacancyForm = ({ isEditMode }: { isEditMode?: boolean }) => {
         itemsPerPage: 200,
     });
     const { data: employments, isFetching: isFetchingEmployments } = useGetEmploymentTypesDictionaryQuery();
-    const { data: templatesOfBenefits, isFetching: isFetchingBenefits } = useGetTemplatesOfBenefitsDictionaryQuery({});
-    const { data: templatesOfTasks, isFetching: isFetchingTasks } = useGetTemplatesOfTasksDictionaryQuery({});
     const { data: departments, isFetching: isFetchingDepartments } = useGetDepartmentsDictionaryQuery({
         page: 1,
         itemsPerPage: 200,
@@ -224,8 +215,6 @@ export const VacancyForm = ({ isEditMode }: { isEditMode?: boolean }) => {
         isFetchingCategories ||
         isFetchingPositions ||
         isFetchingEmployments ||
-        isFetchingBenefits ||
-        isFetchingTasks ||
         isFetchingDepartments ||
         isFetchingCurrentVacancy ||
         isFetchingSkills;
@@ -242,18 +231,18 @@ export const VacancyForm = ({ isEditMode }: { isEditMode?: boolean }) => {
         <CabinetLayout>
             <VacancyFormProvider form={form}>
                 <FormContainer id='vacancy-form' onSubmit={onSubmit}>
-                    <Flex justify='space-between' style={{ minWidth: 650 }}>
+                    <Flex justify='space-between' maw={650} w='100%'>
                         <Box w={420}>
                             <FormCategoryName title='Описание вакансии' />
                             <Flex direction='column' gap='xl'>
                                 <SelectInput
-                                    data={positions?.payload?.map(({ id, name }) => name) ?? []}
+                                    data={positions?.payload?.map(({ name }) => name) ?? []}
                                     name='position'
                                     label='Наименование должности'
                                     placeholder='Выберите из списка'
                                 />
                                 <SelectInput
-                                    data={departments?.payload?.map(({ id, name }) => name) ?? []}
+                                    data={departments?.payload?.map(({ name }) => name) ?? []}
                                     name='department'
                                     label='Отдел или подразделение компании'
                                     placeholder='Выберите из списка'
@@ -328,7 +317,7 @@ export const VacancyForm = ({ isEditMode }: { isEditMode?: boolean }) => {
                                 <KeySkills
                                     name='skills'
                                     label='Требуемые навыки и знания'
-                                    data={skills?.payload?.map(({ id, name }) => name) ?? []}
+                                    data={skills?.payload?.map(({ name }) => name) ?? []}
                                     onSearch={(search) => setSkillsValue(search)}
                                     placeholder='Укажите требуемые навыки и знания'
                                 />

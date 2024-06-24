@@ -1,0 +1,31 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--size-md);
+
+  @include breakpoint(495px) {
+    flex-direction: row;
+    gap: 0;
+  }
+}
+
+.link {
+  margin-right: var(--size-md);
+  font-size: var(--mantine-font-size-xl);
+
+  &:hover {
+    border-bottom: 1px solid currentcolor;
+    background: transparent;
+  }
+
+  @include breakpoint(495px) {
+    margin-right: var(--size-5xl);
+    font-size: var(--mantine-font-size-md);
+  }
+}
+
+.active {
+  font-weight: 600;
+  color: var(--mantine-color-indigo-8);
+}

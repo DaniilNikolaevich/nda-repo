@@ -1,31 +1,34 @@
-import { useEffect, useState } from 'react';
 import { Flex, Loader } from '@mantine/core';
+import { useUnit } from 'effector-react';
+import { isNull } from 'lodash-es';
 import { useRouter } from 'next/router';
 
 import { ProfileCommentsByCandidate, ProfileSummaryByCandidate } from '@/components/features';
 import {
+    $isAuth,
+    $isRecruiter,
     useGetAllWorkExperienceByMeQuery,
     useGetAllWorkExperienceByUserQuery,
     useGetEducationByMeQuery,
     useGetEducationByUserQuery,
     useGetMainInfoByMeQuery,
     useGetMainInfoByUserQuery,
-    useIsRecruiter,
 } from '@/services';
+import { useIsTablet } from '@/shared/hooks/media';
 
 import { ProfileApplicantContacts } from './ProfileApplicantContacts';
 import { ProfileApplicantInfo } from './ProfileApplicantInfo';
 
 export const UserProfile = () => {
-    const router = useRouter();
-    const [blocked, setBlocked] = useState(true);
-    const [isRecruiter] = useIsRecruiter();
+    const isAuth = useUnit($isAuth);
+    const isRecruiter = useUnit($isRecruiter);
+    const isTablet = useIsTablet();
     const {
         query: { id },
     } = useRouter();
 
     const { data: baseInfo, isFetching: isFetchingBaseInfo } = useGetMainInfoByMeQuery(null, {
-        skip: Boolean(id),
+        skip: Boolean(id) || !isAuth || Boolean(isRecruiter),
         refetchOnMountOrArgChange: true,
     });
     const { data: experience, isFetching: isFetchingExperience } = useGetAllWorkExperienceByMeQuery(null, {
@@ -73,15 +76,7 @@ export const UserProfile = () => {
         isFetchingExperienceById ||
         isFetchingEducationById;
 
-    useEffect(() => {
-        if (!isRecruiter) {
-            router.push('/');
-        } else {
-            setBlocked(false);
-        }
-    }, []);
-
-    if (isFetching || blocked) {
+    if (isFetching) {
         return (
             <Flex align='center' justify='center'>
                 <Loader />
@@ -90,13 +85,8 @@ export const UserProfile = () => {
     }
 
     return (
-        <Flex gap={20} justify='center' pos='relative'>
-            <ProfileApplicantInfo
-                baseInfo={baseInfo || baseInfoById}
-                experience={experience || experienceById}
-                education={education || educationById}
-            />
-            <Flex direction='column' gap={20} pos='sticky' h='fit-content' top={72}>
+        <Flex direction={isTablet ? 'row-reverse' : 'column'} gap='var(--size-lg)' justify='center' pos='relative'>
+            <Flex direction='column' gap='var(--size-lg)' pos='sticky' h='fit-content' top={72}>
                 <ProfileApplicantContacts data={baseInfo || baseInfoById} />
                 {baseInfoById && (
                     <>
@@ -105,6 +95,11 @@ export const UserProfile = () => {
                     </>
                 )}
             </Flex>
+            <ProfileApplicantInfo
+                baseInfo={baseInfo || baseInfoById}
+                experience={experience || experienceById}
+                education={education || educationById}
+            />
         </Flex>
     );
 };

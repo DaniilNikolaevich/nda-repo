@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'news_feed.apps.NewsFeedConfig',
     'vacancies.apps.VacanciesConfig',
     "chat.apps.ChatConfig",
-    "calendars.apps.CalendarsConfig"
+    "calendars.apps.CalendarsConfig",
+    "dashboard.apps.DashboardConfig"
 
 ]
 
@@ -316,4 +317,3 @@ CENTRIFUGO_API_URL = os.getenv("CENTRIFUGO_API_URL")
 CENTRIFUGO_HMAC_SECRET_KEY = os.getenv("CENTRIFUGO_HMAC_SECRET_KEY")
 
 YANDEX_OAUTH_TOKEN = os.getenv("YANDEX_OAUTH_TOKEN")
-

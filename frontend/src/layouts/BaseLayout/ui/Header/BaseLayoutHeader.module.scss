@@ -1,12 +1,16 @@
 .root {
   display: flex;
   align-items: center;
-  padding: var(--size-sm) var(--size-lg);
+  padding-right: var(--size-xs);
+
+  @include md-block {
+    padding: var(--size-sm) var(--size-md);
+    padding-block: 0;
+  }
 }
 
 .logo {
   display: block;
-  margin-right: var(--size-lg);
   height: 44px;
 
   svg {

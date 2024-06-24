@@ -19,4 +19,3 @@ def config_loggers(*args, **kwargs):
 
 
 app.autodiscover_tasks()
-

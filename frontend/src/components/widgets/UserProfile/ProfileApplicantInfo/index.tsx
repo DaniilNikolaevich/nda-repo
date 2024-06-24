@@ -1,4 +1,4 @@
-import { Flex } from '@mantine/core';
+import { Flex, useMantineColorScheme } from '@mantine/core';
 
 import {
     ProfileAboutApplicant,
@@ -8,7 +8,8 @@ import {
     ProfileInfoTitle,
     ProfileSalaryApplicant,
 } from '@/components/entities';
-import {
+import { useIsTablet } from '@/shared/hooks/media';
+import type {
     ProfileEducationApplicantType,
     ProfileExperienceApplicantType,
     ProfileInfoApplicantTypes,
@@ -21,13 +22,24 @@ interface ProfileApplicantInfoProps {
 }
 
 export const ProfileApplicantInfo = ({ baseInfo, experience, education }: ProfileApplicantInfoProps) => {
+    const isTablet = useIsTablet();
+    const { colorScheme } = useMantineColorScheme();
+    const isDarkTheme = colorScheme === 'dark';
+
     if (!baseInfo || !experience || !education) {
         return null;
     }
 
     return (
-        <Flex p={20} gap={40} bg='white' direction='column' w='fit-content' style={{ borderRadius: 16 }}>
-            <Flex gap={20} mb={20}>
+        <Flex
+            p={20}
+            gap={40}
+            bg={isDarkTheme ? 'dark.4' : 'white'}
+            direction='column'
+            w='fit-content'
+            style={{ borderRadius: 16 }}
+        >
+            <Flex gap={20} mb={20} align='flex-start' direction={isTablet ? 'row' : 'column'}>
                 <ProfileAvatarApplicant avatar={baseInfo?.avatar_url} />
                 <ProfileInfoTitle data={baseInfo} />
             </Flex>

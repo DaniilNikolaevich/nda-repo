@@ -51,4 +51,5 @@ export interface RecruitmentProcessModel {
     created_at: string;
     updated_at: string;
     interview: InterviewModel;
+    chat: null | string;
 }

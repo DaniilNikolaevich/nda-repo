@@ -44,6 +44,12 @@ const ChatsService = BaseApi.enhanceEndpoints({
             }),
             invalidatesTags: ['CHAT_HISTORY'],
         }),
+        getNotifications: build.query<{ total: number; [K: string]: number }, void>({
+            query: () => ({
+                method: HTTP_METHOD.GET,
+                url: `/chat/notification-stats`,
+            }),
+        }),
     }),
 });
 
@@ -52,5 +58,8 @@ export const {
     useCreateChatByCandidateMutation,
     useGetAllMyChatsQuery,
     useGetChatHistoryQuery,
+    useLazyGetChatHistoryQuery,
     useSendChatMessageMutation,
+    useGetNotificationsQuery,
+    useLazyGetNotificationsQuery,
 } = ChatsService;

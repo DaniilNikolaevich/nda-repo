@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, PasswordInput, Title } from '@mantine/core';
+import { Button, PasswordInput, Title, useMantineColorScheme } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { zodResolver } from 'mantine-form-zod-resolver';
 import { redirect, useSearchParams } from 'next/navigation';
@@ -13,6 +13,8 @@ import { RestorePasswordSchema } from '@/shared/validate';
 import { RestorePasswordFormProvider, useRestorePasswordForm } from './model/useRestorePasswordForm';
 
 export const RestorePassword = ({ title = 'Смена пароля', isReset = false }: { isReset?: boolean; title?: string }) => {
+    const { colorScheme } = useMantineColorScheme();
+    const isDarkMode = colorScheme === 'dark';
     const router = useRouter();
     const searchParams = useSearchParams();
     const [isVisiblePassword, setIsVisiblePassword] = useState(false);
@@ -31,6 +33,8 @@ export const RestorePassword = ({ title = 'Смена пароля', isReset = f
     ] = useResetPasswordConfirmationMutation();
 
     const verification_code = searchParams.get('verification_code');
+
+    const [background, setBackground] = useState('dark.4');
 
     const onSubmit = form.onSubmit(async (values) => {
         if (!verification_code) {
@@ -67,6 +71,14 @@ export const RestorePassword = ({ title = 'Смена пароля', isReset = f
             router.push('/auth');
         }
     }, [isSuccess, isNewPasswordSuccess]);
+
+    useEffect(() => {
+        if (isDarkMode) {
+            return setBackground('dark.4');
+        }
+
+        setBackground('white');
+    }, []);
 
     return (
         <RestorePasswordFormProvider form={form}>

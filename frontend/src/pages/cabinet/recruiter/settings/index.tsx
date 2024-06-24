@@ -1,13 +1,35 @@
-import React from 'react';
-import { Flex, Title } from '@mantine/core';
+import { useEffect, useState } from 'react';
+import { Center, Flex, Loader, Title } from '@mantine/core';
+import { useUnit } from 'effector-react';
+import { useRouter } from 'next/router';
 
 import { RecruiterCabinetForm } from '@/components/widgets';
 import { BaseLayout } from '@/layouts';
-import { useGetInfoRecruiterByMeQuery } from '@/services';
+import { $isRecruiter } from '@/services';
 
 import s from './RecruiterPage.module.css';
 
 function SettingsPage() {
+    const [blocked, setBlocked] = useState(true);
+    const router = useRouter();
+    const isRecruiter = useUnit($isRecruiter);
+
+    useEffect(() => {
+        if (!isRecruiter) {
+            router.push('/');
+        } else {
+            setBlocked(false);
+        }
+    }, []);
+
+    if (blocked) {
+        return (
+            <Center>
+                <Loader />
+            </Center>
+        );
+    }
+
     return (
         <BaseLayout title='Личный кабинет рекрутера'>
             <div className={s.root}>

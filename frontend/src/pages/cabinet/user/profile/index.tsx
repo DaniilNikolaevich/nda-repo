@@ -1,12 +1,14 @@
-import { Flex } from '@mantine/core';
+import { Container } from '@mantine/core';
 
-import { ProfileApplicantContacts, ProfileApplicantInfo, UserProfile } from '@/components/widgets';
+import { UserProfile } from '@/components/widgets';
 import { BaseLayout } from '@/layouts';
 
 function UserPage() {
     return (
-        <BaseLayout title='Личный кабинет соискателя'>
-            <UserProfile />
+        <BaseLayout title='PeopleFlow | Личный кабинет соискателя'>
+            <Container>
+                <UserProfile />
+            </Container>
         </BaseLayout>
     );
 }

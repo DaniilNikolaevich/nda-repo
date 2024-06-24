@@ -1,11 +1,13 @@
 import { Group, Tabs, TabsList, Text } from '@mantine/core';
 import { Sparkle } from '@phosphor-icons/react/dist/ssr/Sparkle';
+import { useUnit } from 'effector-react';
 import { useRouter } from 'next/router';
 
-import { useIsRecruiter } from '@/services';
+import { $isAuth, $isRecruiter } from '@/services';
 
 export const VacanciesTabTypes = () => {
-    const [isRecruiter] = useIsRecruiter();
+    const isRecruiter = useUnit($isRecruiter);
+    const isAuth = useUnit($isAuth);
     const router = useRouter();
 
     return (
@@ -17,7 +19,7 @@ export const VacanciesTabTypes = () => {
         >
             <TabsList>
                 <Tabs.Tab value='all'>Все вакансии</Tabs.Tab>
-                <Tabs.Tab hidden={isRecruiter} value='my'>
+                <Tabs.Tab hidden={isRecruiter || !isAuth} value='my'>
                     <Group>
                         <Sparkle size={12} />
                         <Text>Персональная AI подборка</Text>

@@ -1,0 +1,30 @@
+.e-kanban {
+  padding: var(--size-md);
+  border-radius: var(--size-md);
+
+  [data-mantine-color-scheme="dark"] & {
+    background-color: var(--mantine-color-dark-3);
+  }
+}
+
+[data-mantine-color-scheme="dark"] {
+  .e-kanban-table {
+    background-color: var(--mantine-color-dark-3);
+  }
+
+  th.e-header-cells.e-template {
+    background-color: var(--mantine-color-dark-5) !important;
+  }
+
+  td.e-content-cells.e-drag.e-drop.e-droppable {
+    background-color: var(--mantine-color-dark-5) !important;
+  }
+
+  div.e-card-wrapper {
+    background-color: var(--mantine-color-dark-5) !important;
+  }
+
+  div.e-card.e-template.e-droppable.e-lib.e-draggable {
+    background-color: var(--mantine-color-dark-1) !important;
+  }
+}

@@ -1,6 +1,5 @@
 import { type ChangeEvent, useEffect, useState } from 'react';
-import { ActionIcon, Flex, Group, Paper, Stack, TextInput } from '@mantine/core';
-import { ArrowsDownUp } from '@phosphor-icons/react/dist/ssr/ArrowsDownUp';
+import { Flex, Paper, Stack, TextInput } from '@mantine/core';
 import { MagnifyingGlass } from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
 import { skipToken } from '@reduxjs/toolkit/query';
 import { isArray } from 'lodash-es';

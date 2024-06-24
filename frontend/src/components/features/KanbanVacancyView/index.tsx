@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 
 import s from '@/components/entities/ProfileInfoTitle/ProfileInfoTitle.module.css';
-import { useDublicateVacancyMutation, useGetVacancyByIdQuery } from '@/services/VacanciesService';
+import { useDuplicateVacancyMutation, useGetVacancyByIdQuery } from '@/services/VacanciesService';
 
 interface KanbanVacancyViewProps {
     vacancyId: string;
@@ -22,7 +22,7 @@ export const KanbanVacancyView = ({ vacancyId }: KanbanVacancyViewProps) => {
             refetchOnMountOrArgChange: true,
         }
     );
-    const [dublicateVacancy] = useDublicateVacancyMutation();
+    const [dublicateVacancy] = useDuplicateVacancyMutation();
 
     const handleEditVacancy = () => {
         push(`/recruiter/process/vacancy/edit/${vacancyId}`);

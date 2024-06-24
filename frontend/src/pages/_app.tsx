@@ -8,9 +8,9 @@ import { Inter } from 'next/font/google';
 
 import 'dayjs/locale/ru';
 
-import { ThemeProvider } from '@/_app/providers';
+import { ChatProvider, ThemeProvider } from '@/_app/providers';
 import StoreProvider from '@/_app/providers/StoreProvider';
-import { setAuthorization, STORAGE } from '@/services';
+import { $setAuthState, STORAGE } from '@/services';
 
 import '../_app/styles/styles.scss';
 
@@ -27,18 +27,20 @@ function App({ Component, pageProps }: AppProps) {
     useEffect(() => {
         const token = STORAGE.getToken();
         if (!token) {
-            setAuthorization(false);
+            $setAuthState(false);
             return;
         }
-        setAuthorization(true);
+        $setAuthState(true);
     }, []);
     return (
         <ThemeProvider>
             <StoreProvider>
-                <TopProgress />
-                <div className={clsx(pageProps.className, inter.className)}>
-                    <Component {...pageProps} />
-                </div>
+                <ChatProvider>
+                    <TopProgress />
+                    <div className={clsx(pageProps.className, inter.className)}>
+                        <Component {...pageProps} />
+                    </div>
+                </ChatProvider>
             </StoreProvider>
         </ThemeProvider>
     );

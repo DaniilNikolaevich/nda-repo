@@ -1,4 +1,5 @@
 import { CheckEmailMessage } from '@/components/entities';
+import { useTheme } from '@/shared/hooks';
 import { FormContainer } from '@/shared/ui';
 
 import { RegistrationFormProvider, useRegistration } from './model';
@@ -7,9 +8,17 @@ import { Controls, CVInput, FirstNameInput, FormTitle, InputEmail, LastNameInput
 export const RegistrationForm = () => {
     const { form, onSubmit, isLoading, isSuccess } = useRegistration();
 
+    const { background } = useTheme();
+
     return (
         <RegistrationFormProvider form={form}>
-            <FormContainer centered maw={isSuccess ? 430 : 526} id='registration-form' onSubmit={onSubmit}>
+            <FormContainer
+                centered
+                maw={isSuccess ? 430 : 526}
+                bg={background}
+                id='registration-form'
+                onSubmit={onSubmit}
+            >
                 {isSuccess ? (
                     <CheckEmailMessage email={form.getValues().email} />
                 ) : (

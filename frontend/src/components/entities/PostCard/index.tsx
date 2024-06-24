@@ -1,15 +1,12 @@
-import { Box, Button, Flex, Image, Paper, Pill, PillGroup, Text, Title } from '@mantine/core';
+import { Box, Button, Flex, Paper, Pill, PillGroup, Text, Title, useMantineColorScheme } from '@mantine/core';
 import { ChatDots } from '@phosphor-icons/react/dist/ssr/ChatDots';
-import { ThumbsUp } from '@phosphor-icons/react/dist/ssr/ThumbsUp';
 import dayjs from 'dayjs';
 import { isArray } from 'lodash-es';
-import NextImage from 'next/image';
 import Link from 'next/link';
 
 import { SetLikeButton } from '@/components/features';
-import { News } from '@/shared/types/common-models';
-import { PartnersNewsBadge } from '@/shared/ui';
-import { MemoImage } from '@/shared/ui/MemoImage';
+import type { News } from '@/shared/types/common-models';
+import { MemoImage, PartnersNewsBadge } from '@/shared/ui';
 import { extractUrl } from '@/shared/utils';
 
 import s from './PostCard.module.scss';
@@ -40,10 +37,13 @@ export const PostCard = ({
     };
     const alt = `Изображение новости: ${title}`;
 
+    const { colorScheme } = useMantineColorScheme();
+    const isDarkMode = colorScheme === 'dark';
+
     return (
-        <Paper p='var(--size-lg)' withBorder>
+        <Paper p='var(--size-lg)' radius='var(--size-md)' bg={isDarkMode ? 'dark.5' : 'white'}>
             <Flex direction='column' gap='var(--size-sm)'>
-                {cover && <MemoImage width={870} height={420} src={getSrc()} alt={alt} />}
+                {cover && <MemoImage w='100%' height={420} src={getSrc()} alt={alt} />}
                 <Flex justify='space-between'>
                     {tags && tags.length > 0 && (
                         <PillGroup>

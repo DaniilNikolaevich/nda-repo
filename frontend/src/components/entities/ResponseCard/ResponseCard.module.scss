@@ -1,0 +1,25 @@
+.root {
+  flex-direction: column;
+  padding-bottom: var(--size-lg);
+
+  @include md-block {
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: 0;
+  }
+}
+
+.link {
+  display: inline-block;
+  padding: var(--size-lg);
+  width: 100%;
+  color: var(--mantine-color-black);
+}
+
+.root:not(:last-child) {
+  border-bottom: 1px solid var(--separator);
+}
+
+.root a:hover .title {
+  color: var(--mantine-color-indigo-5);
+}

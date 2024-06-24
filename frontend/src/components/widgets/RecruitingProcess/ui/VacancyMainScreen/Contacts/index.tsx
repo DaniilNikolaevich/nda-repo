@@ -1,10 +1,9 @@
-import { Fragment } from 'react';
-import { Box, Flex, Group, Spoiler, Stack, Text } from '@mantine/core';
+import { Flex, Group, Spoiler, Stack, Text } from '@mantine/core';
 import { CaretDown } from '@phosphor-icons/react/dist/ssr/CaretDown';
 import { isArray } from 'lodash-es';
 import Link from 'next/link';
 
-import { CandidateModel } from '@/shared/types/common-models/Candidates';
+import type { CandidateModel } from '@/shared/types/common-models/Candidates';
 import { contactsMapper } from '@/shared/utils';
 
 export const Contacts = ({ contacts }: { contacts?: CandidateModel['contacts'] }) => {
@@ -36,7 +35,7 @@ export const Contacts = ({ contacts }: { contacts?: CandidateModel['contacts'] }
                             );
                         case 'Email':
                             return (
-                                <Flex gap={12} key={contact.value}>
+                                <Flex gap={12} key={contact.value} style={{ overflow: 'hidden' }}>
                                     <Text fz={14} c='dimmed' w={64}>
                                         Email
                                     </Text>
@@ -48,7 +47,16 @@ export const Contacts = ({ contacts }: { contacts?: CandidateModel['contacts'] }
                                         fz={14}
                                         fw={600}
                                     >
-                                        <Link href={`mailto:${contact.value}`}>{contact.value}</Link>
+                                        <Link
+                                            style={{
+                                                display: 'block',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                            }}
+                                            href={`mailto:${contact.value}`}
+                                        >
+                                            {contact.value}
+                                        </Link>
                                     </Text>
                                 </Flex>
                             );

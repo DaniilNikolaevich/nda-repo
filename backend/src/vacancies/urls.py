@@ -6,12 +6,13 @@ from vacancies.views import RecruiterVacancyView, RecruiterVacancyDetailView, Re
     RecruiterFlowDetailView, RecruiterVacancyStatusView, RecruiterFlowChangeStepView, InviteCandidateView, \
     RecruitmentFlowAllowedStepsView, ChooseInterviewTimeSlotView, DeclineInterviewByCandidateView, \
     DeclineInterviewByRecruiterView, DuplicateVacancyView, CandidateView, SuitableCandidatesView, SuitableVacanciesView, \
-    SimilarVacanciesView, SubscribeForNewVacanciesView
+    SimilarVacanciesView, SubscribeForNewVacanciesView, CandidateRespondedVacancies
 
 urlpatterns = [
     path('subscribe', SubscribeForNewVacanciesView.as_view()),
     path('suitable-vacancies', SuitableVacanciesView.as_view()),
     path('candidates', CandidateView.as_view()),
+    path('candidate-responded-vacancies', CandidateRespondedVacancies.as_view()),
     path('candidate-vacancies', CandidateVacancyView.as_view()),
     path('candidate-vacancies/<uuid:vacancy_id>', CandidateVacancyDetailView.as_view()),
     path('recruiter-vacancies', RecruiterVacancyView.as_view()),

@@ -1,29 +1,9 @@
-import { useMediaQuery, useViewportSize } from '@mantine/hooks';
+import { useMediaQuery } from '@mantine/hooks';
 
-export const useIsDesktop = () => {
-    const isDesktopMedia = useMediaQuery('(min-width: 992px');
-    const { height } = useViewportSize();
+export const useIsDesktop = () => useMediaQuery('(min-width: 992px');
 
-    return isDesktopMedia && height > 850;
-};
+export const useIsLaptop = () => useMediaQuery('(min-width: 1140px');
 
-export const useIsLaptop = () => {
-    const isLaptopMedia = useMediaQuery('(min-width: 1140px');
-    const { height } = useViewportSize();
+export const useIsTablet = () => useMediaQuery('(min-width: 875px');
 
-    return isLaptopMedia && height > 850;
-};
-
-export const useIsTablet = () => {
-    const isTabletMedia = useMediaQuery('(min-width: 875px');
-    const { height } = useViewportSize();
-
-    return isTabletMedia && height > 850;
-};
-
-export const useIsSmallTablet = () => {
-    const isSmallTabletMedia = useMediaQuery('(min-width: 450px');
-    const { height } = useViewportSize();
-
-    return isSmallTabletMedia && height > 850;
-};
+export const useIsSmallTablet = () => useMediaQuery('(min-width: 450px');

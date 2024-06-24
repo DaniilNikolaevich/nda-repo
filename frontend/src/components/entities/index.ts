@@ -21,3 +21,4 @@ export * from './ArticleView';
 export * from './Comment';
 export * from './CandidateProfileCard';
 export * from './SelectDateForInterview';
+export * from './ResponseCard';

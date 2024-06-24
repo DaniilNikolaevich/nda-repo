@@ -1,5 +1,6 @@
 import { Group } from '@mantine/core';
 import { CalendarBlank } from '@phosphor-icons/react/dist/ssr/CalendarBlank';
+import { ChartDonut } from '@phosphor-icons/react/dist/ssr/ChartDonut';
 import { ClipboardText } from '@phosphor-icons/react/dist/ssr/ClipboardText';
 import { FolderUser } from '@phosphor-icons/react/dist/ssr/FolderUser';
 import { Megaphone } from '@phosphor-icons/react/dist/ssr/Megaphone';
@@ -9,6 +10,17 @@ import { UserSwitch } from '@phosphor-icons/react/dist/ssr/UserSwitch';
 import { VacanciesTabItemType } from '../types/process';
 
 export const vacanciesTabsConfig: Array<VacanciesTabItemType> = [
+    {
+        value: 'dashboard',
+        content: (
+            <Group gap='var(--size-xs)'>
+                <ChartDonut weight='bold' />
+                Дашборд
+            </Group>
+        ),
+        disabled: false,
+        withQuery: true,
+    },
     {
         value: 'recruiting',
         content: (

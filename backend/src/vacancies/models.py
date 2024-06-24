@@ -22,7 +22,6 @@ class Vacancy(BaseModel):
         NEW = 0, "Новая"
         ACTIVE = 1, "Активная"
         NON_ACTIVE = 2, "Неактивная"
-        CLOSED = 3, "Закрытая"
         COMPLETED = 4, "Завершенная"
         ARCHIVE = 5, "Архивная"
 
@@ -138,12 +137,26 @@ class Vacancy(BaseModel):
     )
 
     def __str__(self):
-        return f"{self.id} -> {self.position.name} -> {self.department.name} [{self.get_status_display()}]"
+        return f"{self.id} -> {self.position} -> {self.department} [{self.get_status_display()}]"
 
     class Meta:
         verbose_name = 'Вакансия'
         verbose_name_plural = 'Вакансии'
         ordering = ['-created_at']
+
+    def is_candidate_responded(self, user):
+        recruiter_flow = self.recruiter_recruitment_flows.filter(candidate=user).first()
+        if not recruiter_flow:
+            return False
+        if recruiter_flow.step != RecruiterFlow.Step.CANDIDATE_SELECTED:
+            return True
+        else:
+            return False
+
+    def increase_number_of_views(self):
+        from dashboard.models import VacancyStatistic
+        VacancyStatistic.objects.create(vacancy=self)
+        return True
 
     def duplicate(self):
         vacancy_skills = self.skills.all()
@@ -304,6 +317,11 @@ class RecruiterFlow(BaseModel):
         verbose_name_plural = 'Флоу процессов рекрутинга (рекрутер)'
         ordering = ['-created_at']
 
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding
+        super().save(*args, **kwargs)
+        self.set_chat()
+
     @staticmethod
     def allowed_steps():
         return {
@@ -384,7 +402,7 @@ class RecruiterFlow(BaseModel):
         message = (f"Вы приглашены на {interview_type_name} собеседование по вакансии {position.name}."
                    f"Для выбора удобного времени собеседования или отказа от него, перейдя по ссылке: {time_selection_link}.")
 
-        self.send_message_to_chat(message, recruiter)
+        self.send_message_to_chat(message, None)
 
         # Отправка сообщения на почту
         email = Email()
@@ -394,7 +412,7 @@ class RecruiterFlow(BaseModel):
                 subject="Приглашение на собеседование",
                 title="Вас пригласили на собеседование",
                 greeting=f"Здравствуйте, {candidate.fullname}!",
-                main_text=f"""Меня зовут {recruiter.fullname}, я представляю компанию. 
+                main_text=f"""Меня зовут {recruiter.fullname}, я представляю компанию "Рексофт". 
                     Мы рады сообщить, что Ваше резюме на позицию {position.name} прошло отбор на {interview_type_name} соебседование.
                     Для дальнейшего прохождения собеседования или отказа от него, пожалуйста, перейдите на страницу выбора времени.\n
                     С нетерпением ждем встречи!
@@ -421,7 +439,7 @@ class RecruiterFlow(BaseModel):
 
         # Отправка сообщения в чат
         message = f"""
-        Благодарим Вас за интерес, проявленный к компании и за время, уделенное процессу отбора на позицию {position.name}.
+        Благодарим Вас за интерес, проявленный к компании "Рексофт" и за время, уделенное процессу отбора на позицию {position.name}.
         Мы внимательно рассмотрели Ваше резюме и результаты собеседования. К сожалению, на данный момент мы не можем предложить Вам эту позицию.
         Это решение было принято после тщательного анализа всех кандидатов и их соответствия требованиям вакансии.
         Мы ценим Ваши усилия и рекомендуем следить за нашими открытыми вакансиями в будущем.
@@ -429,7 +447,7 @@ class RecruiterFlow(BaseModel):
         Спасибо за Ваше внимание к нашей компании. Желаем Вам успехов в поиске подходящей работы и достижения профессиональных целей.
         """
 
-        self.send_message_to_chat(message, recruiter)
+        self.send_message_to_chat(message, None)
 
         # Отправка сообщения на почту
         email = Email()
@@ -469,7 +487,7 @@ class RecruiterFlow(BaseModel):
         С нетерпением ждем Вас в нашей команде!
         """
 
-        self.send_message_to_chat(message, recruiter)
+        self.send_message_to_chat(message, None)
 
         # Отправка сообщения на почту
         email = Email()
@@ -510,6 +528,22 @@ class RecruiterFlow(BaseModel):
             return None
 
         return True
+
+
+class CandidateFlow(BaseModel):
+    recruiter_flow = models.ForeignKey(
+        'RecruiterFlow',
+        on_delete=models.CASCADE,
+    )
+    step = models.IntegerField(
+        choices=RecruiterFlow.Step.choices,
+        verbose_name="Шаг"
+    )
+
+    class Meta:
+        verbose_name = "Флоу кандидата"
+        verbose_name_plural = 'Флоу кандидата'
+        ordering = ['-created_at']
 
 
 class Interview(BaseModel):

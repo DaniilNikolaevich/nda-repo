@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Vacancy, RecruiterFlow, FlowHistory, Interview
+from .models import Vacancy, RecruiterFlow, FlowHistory, Interview, CandidateFlow
 
 
 @admin.register(Vacancy)
@@ -116,3 +116,10 @@ class InterviewAdmin(admin.ModelAdmin):
     )
     # Read-only fields
     readonly_fields = ('created_at', 'updated_at')
+
+
+
+@admin.register(CandidateFlow)
+class CandidateFlowAdmin(admin.ModelAdmin):
+    list_display = ('id', 'recruiter_flow', 'step', 'created_at', 'updated_at')
+    ordering = ['-created_at']

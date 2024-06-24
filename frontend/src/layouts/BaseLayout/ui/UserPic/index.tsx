@@ -2,15 +2,35 @@ import { Avatar, Menu } from '@mantine/core';
 import { Gear } from '@phosphor-icons/react/dist/ssr/Gear';
 import { SignOut } from '@phosphor-icons/react/dist/ssr/SignOut';
 import { UserCircle } from '@phosphor-icons/react/dist/ssr/UserCircle';
+import { skipToken } from '@reduxjs/toolkit/query';
+import { useUnit } from 'effector-react';
+import { isNull } from 'lodash-es';
 import Link from 'next/link';
 
-import { logoutAction, STORAGE, useGetMainInfoByMeQuery } from '@/services';
+import {
+    $isAuth,
+    $isRecruiter,
+    logoutAction,
+    STORAGE,
+    useGetInfoRecruiterByMeQuery,
+    useGetMainInfoByMeQuery,
+} from '@/services';
 
 import s from './UserPic.module.css';
 
 export function UserPic() {
     const route = STORAGE.getRole();
-    const { data } = useGetMainInfoByMeQuery();
+    const isRecruiter = useUnit($isRecruiter);
+    const isAuth = useUnit($isAuth);
+
+    const { data: userInfo } = useGetMainInfoByMeQuery(!isAuth ? skipToken : undefined, {
+        skip: isRecruiter || isNull(isRecruiter),
+    });
+    const { data: recruiterInfo } = useGetInfoRecruiterByMeQuery(!isAuth && !isRecruiter ? skipToken : undefined, {
+        skip: !isRecruiter || isNull(isRecruiter),
+    });
+
+    const data = isRecruiter ? recruiterInfo : userInfo;
 
     return (
         <Menu>

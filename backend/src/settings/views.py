@@ -28,8 +28,8 @@ class BotAccessView(APIView):
                     send_telegram_notification.apply_async(kwargs={"user_id": str(user.id), "message": f"""
     Приветствуем вас в нашем боте! 
     Здесь вы будете получать актуальные подборки вакансий, соответствующих вашей специализации, а также информацию о важных обновлениях и действиях на платформе. Это ваш надежный помощник в мире технологий и новых возможностей.
-    Приглашаем вас также присоединиться к нашей официальной группе в Telegram <a href="https://t.me/">Group!</a>. Узнавайте больше о нас, о нашей работе и не пропустите ни одной важной новости. 
-    Ждем вас в <a href="https://t.me/">Group!</a>"""})
+    Приглашаем вас также присоединиться к нашей официальной группе в Telegram <a href="https://t.me/Reksoft_group">Reksoft Group!</a>. Узнавайте больше о нас, о нашей работе и не пропустите ни одной важной новости. 
+    Ждем вас в <a href="https://t.me/Reksoft_group">Reksoft Group!</a>"""})
                 except (User.DoesNotExist, ValueError):
                     pass
             else:

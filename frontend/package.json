@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_ENV=development next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -16,6 +16,7 @@
     "node": ">=20"
   },
   "dependencies": {
+    "@ducanh2912/next-pwa": "^10.2.7",
     "@fullcalendar/core": "^6.1.14",
     "@fullcalendar/daygrid": "^6.1.14",
     "@fullcalendar/interaction": "^6.1.14",
@@ -74,6 +75,8 @@
     "async-mutex": "^0.5.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.11",
+    "effector": "^23.2.2",
+    "effector-react": "^23.2.1",
     "eslint": "^8",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-next": "14.2.3",
@@ -102,7 +105,8 @@
     "stylelint-declaration-block-no-ignored-properties": "^2.7.0",
     "stylelint-order": "^6.0.3",
     "typescript": "^5",
-    "usehooks-ts": "^3.1.0"
+    "usehooks-ts": "^3.1.0",
+    "webpack": "^5.92.1"
   },
   "resolutions": {
     "string-width": "4.2.3"

@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'react';
-import { Center, Flex, type FlexProps } from '@mantine/core';
+import { Center, Flex, type FlexProps, useMantineColorScheme } from '@mantine/core';
 
 import { useIsDesktop } from '@/shared/hooks/media';
 
@@ -25,10 +25,20 @@ export const FormContainer = ({
     className,
     ...props
 }: FormContainerProps) => {
+    const { colorScheme } = useMantineColorScheme();
+    const isDarkMode = colorScheme === 'dark';
     const isDesktop = useIsDesktop();
     return (
         <Center h={centered && isDesktop ? 'calc(100vh - 92px)' : ''} className={className}>
-            <Flex maw={maw} direction='column' w='100%' px={px} py={py} bg={bg} style={{ borderRadius: 16 }}>
+            <Flex
+                w='100%'
+                maw={maw}
+                direction='column'
+                px={px}
+                py={py}
+                bg={isDarkMode ? 'dark.4' : bg}
+                style={{ borderRadius: 16 }}
+            >
                 <form style={{ width: '100%' }} {...props}>
                     <Flex gap={gap} direction={direction}>
                         {children}

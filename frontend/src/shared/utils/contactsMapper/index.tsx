@@ -85,3 +85,16 @@ export const isMainContact = (contactType: number) => {
         }
     }
 };
+
+export const getLinkExternalType = (type: number) => {
+    switch (contactsMapper(type)) {
+        case 'Телефон':
+            return 'tel:';
+        case 'Email':
+            return 'mailto:';
+        case 'Telegram':
+            return 'https://t.me/';
+        default:
+            return '';
+    }
+};

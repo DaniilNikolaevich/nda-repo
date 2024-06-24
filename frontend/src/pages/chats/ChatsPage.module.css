@@ -5,4 +5,8 @@
 .aside {
   border-right: 1px solid var(--separator);
   height: calc(100vh - 60px);
+
+  [data-mantine-color-scheme="dark"] & {
+    border-color: var(--mantine-color-dark-3) !important;
+  }
 }

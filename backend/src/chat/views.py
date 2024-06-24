@@ -12,6 +12,7 @@ from base.utils.paginators import QuerySetProcessor
 from chat.filters import ChatMessageFilter
 from chat.models import Chat, ChatMessage
 from chat.serializers import ChatMessageReadSerializer, ChatSerializer
+from chat.tasks import set_read_status_new_message
 from settings.settings import CENTRIFUGO_HMAC_SECRET_KEY
 from users.decorators import auth
 from users.models import User
@@ -91,7 +92,13 @@ class ChatView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
                 content=error.message
             )
-
+        user = kwargs.get('user')
+        if user == chat.recruiter:
+            queryset_processor.queryset.update(is_read_by_recruiter=True)
+        elif user == chat.candidate:
+            queryset_processor.queryset.update(is_read_by_candidate=True)
+        else:
+            pass
         return Response(result)
 
     def post(self, request, chat_id, *args, **kwargs):
@@ -108,6 +115,9 @@ class ChatView(APIView):
             author=self.user,
             message=message
         )
+        set_read_status_new_message.apply_async(kwargs={
+            "message_id": str(chat_message.id)
+        })
 
         return Response(status=status.HTTP_201_CREATED, content={"id": str(chat_message.id)})
 
@@ -146,3 +156,27 @@ class DefaultMessagesView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST, content='Не указано сообщение')
         default_message = self.user.default_messages.create(message=message)
         return Response(status=status.HTTP_201_CREATED, content={"id": str(default_message.id)})
+
+
+@method_decorator([tryexcept, auth, log_action], name='dispatch')
+class NotificationStat(APIView):
+    def dispatch(self, request, *args, **kwargs):
+        self.user = kwargs.get('user')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        if self.user.role == User.Role.RECRUITER:
+            read_field = 'is_read_by_recruiter'
+            self.chats = Chat.objects.filter(recruiter=self.user)
+        elif self.user.role == User.Role.CANDIDATE:
+            read_field = 'is_read_by_candidate'
+            self.chats = Chat.objects.filter(candidate=self.user)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN, content='Доступ запрещен')
+        result = {"total": 0}
+        for chat in self.chats:
+            messages = chat.chat_message.all()
+            result[str(chat.id)] = messages.filter(**{read_field: False}).count()
+            result["total"] += result[str(chat.id)]
+        return Response(result)
+

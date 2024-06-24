@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Box, Flex, Paper, Pill, PillGroup, Text, Title } from '@mantine/core';
 import dayjs from 'dayjs';
 
-import { News } from '@/shared/types/common-models';
+import type { News } from '@/shared/types/common-models';
 import { MemoImage } from '@/shared/ui/MemoImage';
 
 interface ArticleViewProps extends News {
@@ -29,7 +29,7 @@ export const ArticleView = ({ image, title, tags, content, likesActionSlot, comm
                 </Text>
             </Flex>
             <Title order={4}>{title}</Title>
-            <Box className='editor-preview' dangerouslySetInnerHTML={{ __html: content as TrustedHTML }} />
+            <Box className='editor-preview' dangerouslySetInnerHTML={{ __html: content as string }} />
         </Flex>
         <Flex gap='var(--size-lg)'>
             {likesActionSlot}

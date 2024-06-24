@@ -1,0 +1,18 @@
+.donutChart {
+  outline: none !important;
+
+  &:focus {
+    :global {
+      path {
+        outline: none !important;
+      }
+    }
+  }
+}
+
+.label {
+  font-weight: 600;
+  font-size: 18px;
+  white-space: normal;
+  fill: #909296;
+}

@@ -1,13 +1,13 @@
-import { Box, Button, Flex, Popover, Text, TextInput, Title } from '@mantine/core';
-import { Calendar } from '@mantine/dates';
-import dayjs from 'dayjs';
+import { Button, Flex, Paper, Text, Title } from '@mantine/core';
 import { useRouter } from 'next/router';
 
 import FiveHands from '@/_app/assets/images/FiveHands.svg';
 import { BaseLayout } from '@/layouts';
 import { useDeclinedDatesForInterviewMutation } from '@/services';
+import { useTheme } from '@/shared/hooks';
 
 function SelectedTimePage() {
+    const { background } = useTheme();
     const {
         query: { interview_id },
     } = useRouter();
@@ -21,16 +21,7 @@ function SelectedTimePage() {
 
     return (
         <BaseLayout title='Приглашение на интервью'>
-            <Flex
-                p={20}
-                gap={40}
-                bg='white'
-                m='auto'
-                direction='column'
-                miw={950}
-                maw={950}
-                style={{ borderRadius: 16 }}
-            >
+            <Paper p={20} bg={background} m='auto' miw={950} maw={950} radius='lg'>
                 <Flex gap={20}>
                     <Flex direction='column' justify='center' gap={20}>
                         <Title order={3}>Ваше интервью запланировано</Title>
@@ -43,7 +34,7 @@ function SelectedTimePage() {
                         Отказаться от интервью
                     </Button>
                 </Flex>
-            </Flex>
+            </Paper>
         </BaseLayout>
     );
 }

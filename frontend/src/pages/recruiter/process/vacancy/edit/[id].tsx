@@ -24,7 +24,7 @@ function EditPage() {
                             w='fit-content'
                             style={{ borderRadius: '16px', backgroundColor: 'white' }}
                         >
-                            <VacancyForm isEditMode />
+                            <VacancyForm />
                         </Flex>
                     </Flex>
                 </Flex>

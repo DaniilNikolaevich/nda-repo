@@ -6,7 +6,7 @@ import { zodResolver } from 'mantine-form-zod-resolver';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
 
-import { setAuthorization, STORAGE, useLoginMutation } from '@/services';
+import { $setAuthState, STORAGE, useLoginMutation } from '@/services';
 import { isServerError } from '@/shared/types';
 import { AuthorizationSchema } from '@/shared/validate';
 
@@ -46,10 +46,15 @@ export const useAuthorizationModel = () => {
         if (!data || !('access_token' in data)) return;
         STORAGE.setToken(data.access_token);
         STORAGE.setRefreshToken(data.refresh_token);
-        setAuthorization(true);
+        $setAuthState(true);
         const role = (jwtDecode(data.access_token) as { role: number }).role === 2 ? 'recruiter' : 'user';
         STORAGE.setRole(role);
-        router.push(`${role === 'recruiter' ? '/recruiter/process/recruiting' : '/vacancies'}`);
+
+        const ref = document.referrer;
+
+        if (ref.includes('interview/time-selection')) {
+            window.location.href = ref;
+        } else router.push(`${role === 'recruiter' ? '/recruiter/process/recruiting' : '/vacancies'}`);
     }, [data]);
 
     useEffect(() => {
@@ -60,7 +65,7 @@ export const useAuthorizationModel = () => {
             STORAGE.setRole(role);
             router.push(`${role === 'recruiter' ? '/recruiter/process/recruiting' : '/vacancies'}`);
         } else {
-            setAuthorization(false);
+            $setAuthState(false);
         }
     }, []);
 

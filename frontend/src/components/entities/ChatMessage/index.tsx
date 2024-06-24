@@ -7,7 +7,7 @@ import { ChatMessageModel } from '@/shared/types/common-models/Chat';
 
 export const ChatMessage = ({ author, created_at, message }: ChatMessageModel) => {
     const token = STORAGE.getToken();
-    const isMe = token && jwtDecode(token).sub === author.id;
+    const isMe = token && jwtDecode(token).sub === author?.id;
 
     return (
         <Box>

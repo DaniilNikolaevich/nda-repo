@@ -1,11 +1,13 @@
-import React, { ChangeEventHandler, useState } from 'react';
+import { type ChangeEventHandler, useState } from 'react';
 import { Checkbox, Flex, RingProgress, Text, TextInput } from '@mantine/core';
 import { Lightbulb } from '@phosphor-icons/react/dist/ssr/Lightbulb';
 
 import { FormCategoryName } from '@/components/widgets/GenerallyDataForm/ui';
 import { useGetProfileStatisticByMeQuery } from '@/services';
+import { useIsLaptop } from '@/shared/hooks/media';
 
 export const Newsletter = () => {
+    const isDesktop = useIsLaptop();
     const [checkNews, setCheckNews] = useState(false);
 
     const { data } = useGetProfileStatisticByMeQuery(null, {
@@ -17,8 +19,16 @@ export const Newsletter = () => {
     };
 
     return (
-        <Flex pos='sticky' top={72} direction='column' gap={20}>
-            <Flex p='var(--size-lg)' style={{ borderRadius: '16px', backgroundColor: 'white' }} direction='column'>
+        <Flex
+            maw={isDesktop ? 405 : '100%'}
+            flex={isDesktop ? '1 0 100%' : '1 1 100%'}
+            pos={isDesktop ? 'sticky' : 'static'}
+            top={72}
+            direction='column'
+            gap={20}
+            h='fit-content'
+        >
+            <Flex bg='white' p='var(--size-lg)' style={{ borderRadius: '16px' }} direction='column'>
                 <FormCategoryName title='Заполнение профиля' />
                 <Flex justify='center'>
                     <RingProgress

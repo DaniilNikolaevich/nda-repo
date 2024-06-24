@@ -21,3 +21,8 @@ node_modules
 yarn.lock
 
 *.woff2
+*.xml
+*.ico
+workbox*
+sw.js
+.eslintignore

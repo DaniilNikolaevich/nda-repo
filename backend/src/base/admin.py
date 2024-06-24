@@ -5,7 +5,8 @@ from django.utils import timezone
 from django.utils.html import format_html
 
 from base.models import City, Skill, Specialization, Position, Institution, SpecializationGroup, EmployeeCompany, \
-    Country
+    Country, Department
+from users.models import UserComment
 
 try:
     from django_celery_results.admin import TaskResultAdmin
@@ -174,6 +175,37 @@ class EmployeeCompanyAdmin(BaseAdmin):
     fieldsets = (
         (None, {
             'fields': ('id', 'name', 'is_verified')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+        }),
+    )
+
+
+@admin.register(Department)
+class DepartmentAdmin(BaseAdmin):
+    list_display = ('id', 'name', 'created_at', 'updated_at')
+    search_fields = ('name',)
+    ordering = ['name']
+    fieldsets = (
+        (None, {
+            'fields': ('id', 'name')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+        }),
+    )
+
+
+@admin.register(UserComment)
+class UserCommentAdmin(BaseAdmin):
+    list_display = ('id', 'user', 'author', 'text', 'file_url', 'created_at', 'updated_at')
+    search_fields = ('user__id', 'text')
+    autocomplete_fields = ('user', 'author')
+    ordering = ['user']
+    fieldsets = (
+        (None, {
+            'fields': ('id', 'user', 'author', 'text')
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at'),

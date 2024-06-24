@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Button, Paper, Stack, Text, TextInput, Title } from '@mantine/core';
+import { Button, Paper, Stack, Text, TextInput, Title, useMantineColorScheme } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { Envelope } from '@phosphor-icons/react/dist/ssr/Envelope';
@@ -7,6 +7,9 @@ import { Envelope } from '@phosphor-icons/react/dist/ssr/Envelope';
 import { useEmailSubscribeMutation } from '@/services/SubscriptionService';
 
 export const EmailSubscription = () => {
+    const { colorScheme } = useMantineColorScheme();
+    const isDarkTheme = colorScheme === 'dark';
+
     const [subscribe, { isLoading, isSuccess, isError }] = useEmailSubscribeMutation();
     const form = useForm<{ email: string }>({
         mode: 'uncontrolled',
@@ -44,7 +47,7 @@ export const EmailSubscription = () => {
     }, [isError]);
 
     return (
-        <Paper p='var(--size-xl)' radius='var(--size-md)' pos='sticky' top={72}>
+        <Paper p='var(--size-xl)' radius='var(--size-md)' pos='sticky' top={72} bg={isDarkTheme ? 'dark.4' : 'white'}>
             <form onSubmit={onSubmit}>
                 <Stack gap='var(--size-sm)'>
                     <Title order={5}>Подписаться на рассылку</Title>

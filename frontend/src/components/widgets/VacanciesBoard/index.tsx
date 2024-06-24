@@ -1,13 +1,12 @@
 // @ts-nocheck TODO: добавить типов
 import { useEffect, useState } from 'react';
 import { Box, Button, Drawer, Flex, Loader, LoadingOverlay, Text, Title } from '@mantine/core';
-import { randomId, useDisclosure } from '@mantine/hooks';
+import { useDisclosure } from '@mantine/hooks';
 import { Plus, UserCirclePlus } from '@phosphor-icons/react';
+import { Eye } from '@phosphor-icons/react/dist/ssr/Eye';
 import { extend } from '@syncfusion/ej2-base';
 import { ColumnDirective, ColumnsDirective, KanbanComponent } from '@syncfusion/ej2-react-kanban';
-import cn from 'clsx';
 import dayjs from 'dayjs';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { KanbanAddNewRecruiter, KanbanVacancyView } from '@/components/features';
@@ -88,7 +87,11 @@ export const VacanciesBoard = () => {
                 </Flex>
                 <Flex direction='column'>
                     <Text>{e?.department?.name}</Text>
-                    <Flex justify='flex-end'>
+                    <Flex justify='space-between' align='center'>
+                        <Flex align='center' gap={4}>
+                            <Eye size={16} />
+                            <Text>{e?.views_num ?? 0}</Text>
+                        </Flex>
                         <Title order={6}>{e?.salary}&nbsp;₽</Title>
                     </Flex>
                 </Flex>

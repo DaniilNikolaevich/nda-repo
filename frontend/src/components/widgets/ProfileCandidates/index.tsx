@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import {
-    Box,
     Button,
     Center,
     type ComboboxItem,
@@ -26,8 +25,7 @@ import { useGetAllCandidatesQuery, useGetAllVacanciesForRecruiterQuery } from '@
 import type { CandidateParams } from '@/services/VacanciesService/dto';
 import { useGetCities } from '@/shared/hooks';
 
-import { RegionFilter } from './ui/RegionFilter';
-import { SalaryFilter } from './ui/SalaryFilter';
+import { RegionFilter, SalaryFilter } from './ui';
 
 const TYPES = [
     {

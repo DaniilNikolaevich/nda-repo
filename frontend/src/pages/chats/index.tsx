@@ -1,52 +1,16 @@
-import { useEffect } from 'react';
-import { Button, Flex, Grid, Loader, Paper, TextInput, Title, VisuallyHidden } from '@mantine/core';
-import { skipToken } from '@reduxjs/toolkit/query';
-import { Centrifuge } from 'centrifuge';
-import { isArray } from 'lodash-es';
-import { useRouter } from 'next/router';
+import { Flex, Grid, Loader, Paper, Title, useMantineColorScheme, VisuallyHidden } from '@mantine/core';
 
+import { useChat } from '@/_app/providers';
 import { ChatForm, ChatHeader, ChatList, ChatMessages } from '@/components/widgets';
 import { EmptyState } from '@/components/widgets/EmptyState';
 import { BaseLayout } from '@/layouts';
-import {
-    STORAGE,
-    useGetAllMyChatsQuery,
-    useGetChatHistoryQuery,
-    useIsRecruiter,
-    useSendChatMessageMutation,
-} from '@/services';
-import { API_ROUTES } from '@/shared/api';
 
 import s from './ChatsPage.module.css';
 
 function ChatsPage() {
-    const {
-        query: { chatId },
-    } = useRouter();
-    const token = STORAGE.getChatToken();
-    const { data: chats, isLoading } = useGetAllMyChatsQuery();
-    const isChatsExists = Boolean(chats && chats.chats.length > 0);
-    const isCorrectChatId = chatId && !isArray(chatId);
-
-    const { refetch } = useGetChatHistoryQuery(isCorrectChatId ? chatId : skipToken);
-
-    useEffect(() => {
-        if (!token || !chatId || isArray(chatId)) return;
-
-        const client = new Centrifuge(API_ROUTES.ws_chat, {
-            token,
-        });
-
-        const sub = client.newSubscription(chatId);
-
-        sub.subscribe();
-
-        sub.on('publication', refetch);
-
-        client.connect();
-
-        return () => client.disconnect();
-    }, [chatId, token]);
+    const { colorScheme } = useMantineColorScheme();
+    const isDarkTheme = colorScheme === 'dark';
+    const { isLoading, isChatsExists, chatId, messageType, handleChangeMessageType } = useChat();
 
     return (
         <BaseLayout title='Чаты'>
@@ -65,7 +29,7 @@ function ChatsPage() {
                         </Grid.Col>
                         <Grid.Col
                             id='chat-container'
-                            bg='gray.0'
+                            bg={isDarkTheme ? '' : 'gray.0'}
                             p={0}
                             span={9}
                             h='calc(100vh - 69px)'
@@ -74,9 +38,9 @@ function ChatsPage() {
                             <EmptyState show={isChatsExists} />
                             {!isLoading && isChatsExists && chatId && (
                                 <>
-                                    <ChatHeader />
+                                    <ChatHeader onChangeMessageType={handleChangeMessageType} />
                                     <Flex h='calc(100% - 144px)' direction='column'>
-                                        <ChatMessages />
+                                        <ChatMessages messageType={messageType} />
                                         <ChatForm />
                                     </Flex>
                                 </>

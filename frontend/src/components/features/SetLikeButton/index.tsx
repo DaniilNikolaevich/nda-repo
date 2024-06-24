@@ -1,13 +1,14 @@
-import { Button, Tooltip } from '@mantine/core';
+import { Button, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { ThumbsUp } from '@phosphor-icons/react/dist/ssr/ThumbsUp';
+import { useUnit } from 'effector-react';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 
-import { useAuthorization } from '@/services';
+import { $isAuth } from '@/services';
 import { useSetLikeMutation } from '@/services/NewsService';
 
 export const SetLikeButton = ({ likes, postId, isLiked }: { likes: number; postId: string; isLiked: boolean }) => {
-    const [isAuth] = useAuthorization();
+    const isAuth = useUnit($isAuth);
     const { pathname, replace, query } = useRouter();
     const [setLike] = useSetLikeMutation();
 
@@ -22,10 +23,19 @@ export const SetLikeButton = ({ likes, postId, isLiked }: { likes: number; postI
         });
     };
 
+    const { colorScheme } = useMantineColorScheme();
+    const isDarkMode = colorScheme === 'dark';
+
     if (!isAuth) {
         return (
             <Tooltip label='Войдите, чтобы оставлять реакции'>
-                <Button p={0} color='grey.5' bg='white' variant='light' leftSection={<ThumbsUp size={24} />}>
+                <Button
+                    p={0}
+                    color='grey.5'
+                    bg={isDarkMode ? 'transparent' : 'white'}
+                    variant='light'
+                    leftSection={<ThumbsUp size={24} />}
+                >
                     {likes}
                 </Button>
             </Tooltip>
@@ -36,7 +46,7 @@ export const SetLikeButton = ({ likes, postId, isLiked }: { likes: number; postI
         <Button
             p={0}
             color={isLiked ? 'indigo.5' : 'grey.5'}
-            bg='white'
+            bg={isDarkMode ? 'transparent' : 'white'}
             variant='light'
             leftSection={<ThumbsUp size={24} />}
             onClick={onSetLikeHandler}

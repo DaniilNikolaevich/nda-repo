@@ -2,6 +2,10 @@
   border-radius: var(--size-sm);
   padding: var(--size-lg);
   color: var(--text-primary);
+
+  [data-mantine-color-scheme="dark"] & {
+    color: var(--mantine-color-text);
+  }
 }
 
 .title {

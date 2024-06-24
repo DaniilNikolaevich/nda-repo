@@ -8,7 +8,7 @@ function VacanciesPage() {
     const isLaptop = useIsLaptop();
 
     return (
-        <BaseLayout>
+        <BaseLayout title='PeopleFlow | Вакансии'>
             <section>
                 <Container>
                     <Title order={2} mb='var(--size-lg)'>

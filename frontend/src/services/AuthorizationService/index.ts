@@ -1,3 +1,5 @@
+import { createEvent, createStore } from 'effector';
+
 import type {
     AuthorizationResetPasswordDTO,
     AuthorizationSetPasswordDTO,
@@ -5,16 +7,22 @@ import type {
     AuthorizationSignInResponseDTO,
 } from '@/services/AuthorizationService/dto';
 import { API_ROUTES, BaseApi, HTTP_METHOD } from '@/shared/api';
-import { createStore } from '@/shared/store';
-import { ServerMessage } from '@/shared/types/common-models';
+import type { ServerMessage } from '@/shared/types/common-models';
 
 import { STORAGE } from '../StorageService';
 
-export const [useIsRecruiter, { set: setIsRecruiter }] = createStore<boolean>(false);
-export const [useAuthorization, { set: setAuthorization }] = createStore<boolean | null>(null);
+export const $isAuth = createStore(false);
+export const $isRecruiter = createStore<boolean | null>(null);
+export const $setAuthState = createEvent<boolean>();
+export const $setIsRecruiterState = createEvent<boolean | null>();
+
+$isAuth.on($setAuthState, (_, payload) => payload);
+$isRecruiter.on($setIsRecruiterState, (_, payload) => payload);
+
 export const logoutAction = () => {
     STORAGE.clear();
-    setAuthorization(false);
+    $setAuthState(false);
+    $setIsRecruiterState(null);
     window.location.href = '/';
 };
 

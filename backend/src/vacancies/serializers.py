@@ -1,5 +1,6 @@
 import datetime
 
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.timezone import get_default_timezone
 from rest_framework import serializers
@@ -13,7 +14,7 @@ from chat.serializers import ChatSerializer
 from users.admin_settings.serializers import AdminUserSerializer
 from users.models import User
 from users.serializer import WorkScheduleField, EmploymentTypeField, CandidateSerializer
-from vacancies.models import Vacancy, RecruiterFlow, FlowHistory, Interview
+from vacancies.models import Vacancy, RecruiterFlow, FlowHistory, Interview, CandidateFlow
 
 
 class StatusField(serializers.Field):
@@ -81,6 +82,39 @@ class VacancySerializer(BaseModelSerializer):
     work_schedule = WorkScheduleField(required=False)
     employment_type = EmploymentTypeField(required=False)
     skills = SkillsField(verified=True)
+    candidate_response = serializers.SerializerMethodField()
+    chat = serializers.SerializerMethodField()
+    views_count = serializers.SerializerMethodField()
+
+    def get_views_count(self, obj):
+        from dashboard.models import VacancyStatistic
+        return VacancyStatistic.objects.filter(vacancy=obj).count()
+
+    def get_candidate_response(self, obj):
+        current_vacancy_id = str(obj.id)
+        user = self.context.get('user')
+        vacancies_dict = self.context.get('vacancies_dict', {})
+        if not user:
+            return {
+                "is_responded": None,
+                "response_time": None
+            }
+        else:
+            return {
+                "is_responded": True if current_vacancy_id in vacancies_dict.keys() else False,
+                "response_time": vacancies_dict.get(current_vacancy_id)
+            }
+
+    def get_chat(self, obj):
+        user = self.context.get('user')
+        if not user:
+            return None
+        recruiter_flow = obj.recruiter_recruitment_flows.filter(candidate=user).first()
+        if not recruiter_flow:
+            return None
+        if not recruiter_flow.chat:
+            return None
+        return ChatSerializer(recruiter_flow.chat).data
 
     class Meta:
         model = Vacancy
@@ -88,7 +122,7 @@ class VacancySerializer(BaseModelSerializer):
             'id', 'responsible_recruiter', 'status', 'position', 'department',
             'country', 'city', 'salary', 'category', 'work_schedule', 'employment_type',
             'description', 'tasks', 'tasks_used_as_template', 'skills', 'additional_requirements',
-            'benefits', 'benefits_used_as_template', 'created_at'
+            'benefits', 'benefits_used_as_template', 'candidate_response', 'chat', 'views_count', 'created_at'
         ]
         read_only_fields = ['responsible_recruiter', 'status']
 
@@ -195,6 +229,10 @@ class SelectCandidateSerializer(serializers.Serializer):
             candidate=candidate,
             step=RecruiterFlow.Step.CANDIDATE_SELECTED
         )
+        CandidateFlow.objects.create(
+            recruiter_flow=recruiter_flow,
+            step=RecruiterFlow.Step.CANDIDATE_SELECTED
+        )
         FlowHistory.add_record(recruiter_flow, "Кандидат был добавлен на шаг 'Отобранные'")
 
         return recruiter_flow
@@ -213,8 +251,8 @@ class RespondVacancySerializer(serializers.Serializer):
 
         if RecruiterFlow.objects.filter(
                 vacancy=vacancy,
-                candidate=candidate,
-                step=RecruiterFlow.Step.APPLICANT_RESPONSE
+                candidate=candidate).filter(
+            ~Q(step=RecruiterFlow.Step.CANDIDATE_SELECTED)
         ).exists():
             raise serializers.ValidationError("Вы уже откликнулись на данную вакансию")
 
@@ -244,6 +282,11 @@ class RespondVacancySerializer(serializers.Serializer):
         recruiter_flow = RecruiterFlow.objects.create(
             vacancy=vacancy,
             candidate=candidate,
+            step=RecruiterFlow.Step.APPLICANT_RESPONSE
+        )
+
+        CandidateFlow.objects.create(
+            recruiter_flow=recruiter_flow,
             step=RecruiterFlow.Step.APPLICANT_RESPONSE
         )
 
@@ -300,6 +343,11 @@ class RecruiterFlowChangeStepSerializer(BaseModelSerializer):
 
         instance.step = desired_step
         instance.save()
+
+        CandidateFlow.objects.create(
+            recruiter_flow=instance,
+            step=desired_step
+        )
 
         if desired_step == RecruiterFlow.Step.JOB_OFFER:
             FlowHistory.add_record(self.instance, "Кандидату предложен оффер")

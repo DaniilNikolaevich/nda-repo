@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
-import { Button, FileInput, Flex, Paper, Stack, Text, TextInput, Title } from '@mantine/core';
+import { Button, FileInput, Flex, Grid, Paper, Stack, Text, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { Paperclip } from '@phosphor-icons/react/dist/ssr/Paperclip';
+import { useUnit } from 'effector-react';
 import { zodResolver } from 'mantine-form-zod-resolver';
 
-import { useGetMainInfoByMeQuery, useSubscribeOnVacanciesMutation } from '@/services';
+import { $isRecruiter, useGetMainInfoByMeQuery, useSubscribeOnVacanciesMutation } from '@/services';
 import { ACCEPTED_FILE_TYPE } from '@/shared/constants';
 import { FormContainer } from '@/shared/ui';
 import { dataFormObject } from '@/shared/utils';
@@ -15,6 +16,7 @@ import EnvelopeImage from './assets/Envelope.svg';
 import s from './SendVacancyProposal.module.css';
 
 export const SendVacancyProposal = () => {
+    const isRecruiter = useUnit($isRecruiter);
     const form = useForm({
         mode: 'uncontrolled',
         initialValues: {
@@ -71,6 +73,8 @@ export const SendVacancyProposal = () => {
         }
     }, [isSuccess, isError]);
 
+    if (isRecruiter) return null;
+
     return (
         <Paper className={s.root} withBorder bg='indigo.0'>
             <Stack gap='var(--size-sm)' className={s.content}>
@@ -87,17 +91,20 @@ export const SendVacancyProposal = () => {
                     gap='var(--size-sm)'
                 >
                     <TextInput placeholder='Иванов Олег Аскелладович' label='ФИО' {...keys.snp} />
-                    <Flex gap='var(--size-sm)' w='100%' justify='stretch'>
-                        <TextInput placeholder='info@mail.ru' label='E-mail' {...keys.email} flex={1} />
-                        <FileInput
-                            accept={ACCEPTED_FILE_TYPE.resume.mediaTypes.join(',')}
-                            placeholder='Файл в формате PDF'
-                            label='Резюме'
-                            {...keys.cv_file}
-                            rightSection={<Paperclip />}
-                            flex={1}
-                        />
-                    </Flex>
+                    <Grid gutter='var(--size-sm)' w='100%' justify='stretch'>
+                        <Grid.Col span={6}>
+                            <TextInput placeholder='info@mail.ru' label='E-mail' {...keys.email} />
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                            <FileInput
+                                accept={ACCEPTED_FILE_TYPE.resume.mediaTypes.join(',')}
+                                placeholder='Файл в формате PDF'
+                                label='Резюме'
+                                {...keys.cv_file}
+                                rightSection={<Paperclip />}
+                            />
+                        </Grid.Col>
+                    </Grid>
                     <Button type='submit' w='fit-content'>
                         Отправить
                     </Button>

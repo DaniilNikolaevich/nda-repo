@@ -212,6 +212,7 @@ class SpecialDayWriteSerializer(BaseModelSerializer):
         special_day = super().update(instance, validated_data)
         existed_slots = set(special_day.special_day_slots.all().values_list('id', flat=True))
         new_intervals = set()
+        # TODO Если прислать временной слот, который уже есть в БД для создания, то возникнет исключение.
         # подумать, как обработать
         with transaction.atomic():
             for special_day_slot in special_day_slots:

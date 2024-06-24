@@ -123,7 +123,7 @@ const theme = createTheme({
 
 export function ThemeProvider({ children }: PropsWithChildren) {
     return (
-        <MantineProvider theme={theme} classNamesPrefix='app'>
+        <MantineProvider theme={theme} defaultColorScheme='light' classNamesPrefix='app'>
             <Notifications />
             {children}
         </MantineProvider>

@@ -71,7 +71,7 @@ export const CompanyNewsCabinet = () => {
 
     return (
         <>
-            <Flex mb='var(--size-xl)' wrap='wrap' align='center' justify='space-between'>
+            <Flex my='var(--size-xl)' wrap='wrap' align='center' justify='space-between'>
                 <Flex gap='var(--size-lg)' align='center'>
                     <Title order={3} fz={24}>
                         Новости компании

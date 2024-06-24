@@ -1,5 +1,5 @@
 import { Group, Paper, Stack, Text } from '@mantine/core';
-import { ClockCounterClockwise } from '@phosphor-icons/react';
+import { ClockCounterClockwise } from '@phosphor-icons/react/dist/ssr/ClockCounterClockwise';
 import { skipToken } from '@reduxjs/toolkit/query';
 import dayjs from 'dayjs';
 
@@ -9,8 +9,6 @@ import { useGetCandidateHistoryFlowQuery } from '@/services';
 export const History = () => {
     const { selectedProcessUser } = useSelectedVacancy();
     const { data: history } = useGetCandidateHistoryFlowQuery(selectedProcessUser ?? skipToken);
-
-    console.log(selectedProcessUser);
 
     return (
         <Paper>

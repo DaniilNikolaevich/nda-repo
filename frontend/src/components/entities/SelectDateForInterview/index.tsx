@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Flex, Loader, Popover, Text, TextInput, Title } from '@mantine/core';
+import { Box, Button, Flex, Loader, Paper, Popover, Stack, Text, TextInput, Title } from '@mantine/core';
 import { Calendar, DateInput } from '@mantine/dates';
-import { CalendarBlank } from '@phosphor-icons/react/dist/ssr/CalendarBlank';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import qs from 'query-string';
@@ -13,6 +12,7 @@ import {
     useDeclinedDatesForInterviewMutation,
     useSelectDateSlotFlowMutation,
 } from '@/services';
+import { useTheme } from '@/shared/hooks';
 
 export const SelectDateForInterview = () => {
     const {
@@ -21,6 +21,7 @@ export const SelectDateForInterview = () => {
         query: { interview_id },
     } = useRouter();
 
+    const { background, isDarkMode } = useTheme();
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [popoverOpened, setPopoverOpened] = useState(false);
     const [slot, setSlot] = useState<{ id: string; start_time: string; end_time: string } | null>(null);
@@ -86,65 +87,69 @@ export const SelectDateForInterview = () => {
     }
 
     return (
-        <Flex p={20} gap={40} bg='white' m='auto' direction='column' miw={870} maw={870} style={{ borderRadius: 16 }}>
-            <Flex direction='column' gap={20}>
-                <Title order={3}>Выбор даты интервью</Title>
-                <Box w={320}>
-                    <Popover opened={popoverOpened} onClose={() => setPopoverOpened(false)}>
-                        <Popover.Target>
-                            <TextInput
-                                value={selectedDate ? dayjs(selectedDate).format('DD.MM.YYYY') : ''}
-                                onClick={() => setPopoverOpened(true)}
-                                readOnly
-                                placeholder='Выберите дату'
-                            />
-                        </Popover.Target>
-                        <Popover.Dropdown>
-                            <Calendar
-                                excludeDate={(date) => !availableDate?.includes(dayjs(date).format('YYYY-MM-DD'))}
-                                getDayProps={(date) => ({
-                                    onClick: () => handleDateChange(date),
-                                })}
-                                style={{ maxWidth: 300 }} // Можно настроить стили календаря
-                            />
-                        </Popover.Dropdown>
-                    </Popover>
-                </Box>
-            </Flex>
-            <Flex direction='column' gap={20}>
-                <Title order={3}>Выбор времени интервью</Title>
-                {selectedDate ? (
-                    <>
-                        {isFetchingAvailableSlots ? (
-                            <Text style={{ fontSize: 18, color: '#909296' }}>Загружаем свободное время...</Text>
-                        ) : (
-                            <Flex wrap='wrap' w={280} gap={12}>
-                                {availableSlots && availableSlots?.length && availableSlots?.length > 0 ? (
-                                    availableSlots.map((slottt) => (
-                                        <Button
-                                            key={slottt.id}
-                                            variant={slot?.id === slottt.id ? 'filled' : 'outline'}
-                                            onClick={() => handleSelectDate(slottt)}
-                                        >
-                                            {slottt.start_time}
-                                        </Button>
-                                    ))
-                                ) : (
-                                    <Text style={{ fontSize: 18, color: '#909296' }}>Доступные слоты отсутствуют</Text>
-                                )}
-                            </Flex>
-                        )}
-                    </>
-                ) : (
-                    <Text style={{ fontSize: 18, color: '#909296' }}>Сначала выберите дату</Text>
-                )}
-            </Flex>
-            <Flex justify='space-between' align='center'>
-                <Button onClick={handleRequestSlot}>Выбрать</Button>
-                <Button variant='light' color='red' onClick={handleDeclineDate}>
-                    Отказаться от интервью
-                </Button>
-            </Flex>
-        </Flex>
+        <Paper p={20} m='auto' bg={background} miw={870} maw={870} radius='lg'>
+            <Stack gap='var(--size-5xl)'>
+                <Flex direction='column' gap={20}>
+                    <Title order={3}>Выбор даты интервью</Title>
+                    <Box w={320}>
+                        <Popover opened={popoverOpened} onClose={() => setPopoverOpened(false)}>
+                            <Popover.Target>
+                                <TextInput
+                                    value={selectedDate ? dayjs(selectedDate).format('DD.MM.YYYY') : ''}
+                                    onClick={() => setPopoverOpened(true)}
+                                    readOnly
+                                    placeholder='Выберите дату'
+                                />
+                            </Popover.Target>
+                            <Popover.Dropdown>
+                                <Calendar
+                                    excludeDate={(date) => !availableDate?.includes(dayjs(date).format('YYYY-MM-DD'))}
+                                    getDayProps={(date) => ({
+                                        onClick: () => handleDateChange(date),
+                                    })}
+                                    style={{ maxWidth: 300 }} // Можно настроить стили календаря
+                                />
+                            </Popover.Dropdown>
+                        </Popover>
+                    </Box>
+                </Flex>
+                <Flex direction='column' gap={20}>
+                    <Title order={3}>Выбор времени интервью</Title>
+                    {selectedDate ? (
+                        <>
+                            {isFetchingAvailableSlots ? (
+                                <Text style={{ fontSize: 18, color: '#909296' }}>Загружаем свободное время...</Text>
+                            ) : (
+                                <Flex wrap='wrap' w={280} gap={12}>
+                                    {availableSlots && availableSlots?.length && availableSlots?.length > 0 ? (
+                                        availableSlots.map((slottt) => (
+                                            <Button
+                                                key={slottt.id}
+                                                variant={slot?.id === slottt.id ? 'filled' : 'outline'}
+                                                onClick={() => handleSelectDate(slottt)}
+                                            >
+                                                {slottt.start_time}
+                                            </Button>
+                                        ))
+                                    ) : (
+                                        <Text style={{ fontSize: 18, color: '#909296' }}>
+                                            Доступные слоты отсутствуют
+                                        </Text>
+                                    )}
+                                </Flex>
+                            )}
+                        </>
+                    ) : (
+                        <Text style={{ fontSize: 18, color: '#909296' }}>Сначала выберите дату</Text>
+                    )}
+                </Flex>
+                <Flex justify='space-between' align='center'>
+                    <Button onClick={handleRequestSlot}>Выбрать</Button>
+                    <Button variant='light' color='red' onClick={handleDeclineDate}>
+                        Отказаться от интервью
+                    </Button>
+                </Flex>
+            </Stack>
+        </Paper>
     );
 };

@@ -2,19 +2,20 @@ import { Anchor, Button, Paper, Stack, Text, Textarea, Title } from '@mantine/co
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { skipToken } from '@reduxjs/toolkit/query';
+import { useUnit } from 'effector-react';
 import { isArray } from 'lodash-es';
 import { zodResolver } from 'mantine-form-zod-resolver';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { Comment } from '@/components/entities';
-import { useAuthorization } from '@/services';
+import { $isAuth } from '@/services';
 import { useCreateCommentMutation, useGetArticleCommentsQuery } from '@/services/NewsService';
 import { getDeclinations } from '@/shared/utils';
 import { CommentsSchema } from '@/shared/validate';
 
 export const Comments = () => {
-    const [isAuth] = useAuthorization();
+    const isAuth = useUnit($isAuth);
     const [createComment] = useCreateCommentMutation();
     const {
         query: { id },

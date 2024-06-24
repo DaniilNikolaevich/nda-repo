@@ -6,3 +6,5 @@ src/app
 vite.config.ts
 *.d.ts
 ssr.config.ts
+workbox-*
+sw.js

@@ -3,51 +3,39 @@ import { Button, Flex, Group, NumberFormatter, Paper, Stack, Text, Title } from 
 import { ArrowSquareOut } from '@phosphor-icons/react/dist/ssr/ArrowSquareOut';
 import { ChatDots } from '@phosphor-icons/react/dist/ssr/ChatDots';
 import { FileText } from '@phosphor-icons/react/dist/ssr/FileText';
+import { isNull } from 'lodash-es';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
-import { STORAGE, useDownloadResumeQuery, useLazyDownloadResumeQuery } from '@/services';
-import { API_ROUTES } from '@/shared/api';
+import { useLazyDownloadResumeQuery } from '@/services';
+import { useCreateChatWithCandidate } from '@/services/RecruiterService/hooks';
 
 import { useSelectedVacancy } from '../../model/useSelectedVacancy';
 import { AIQuestions } from './AIQuestions';
 import { AISummary } from './AISummary';
 import { Contacts } from './Contacts';
-import { Controls } from './Controls';
-
-const downloadFile = (target_user_id: string) => {
-    fetch(`${API_ROUTES.baseUrl}/users/${target_user_id}/download-cv`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/pdf',
-            Authorization: `Bearer ${STORAGE.getToken()}`,
-        },
-    })
-        .then((response) => {
-            const contentType = response.headers.get('content-type');
-            const blob = response.blob();
-            return { contentType, blob };
-        })
-        .then(({ contentType, blob }: any) => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            const fileType = contentType.split('/')[1];
-            console.log('fileType', fileType);
-
-            a.href = url;
-            a.download = 'file.txt'; // Замените 'file.txt' на желаемое имя файла
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-        })
-        .catch((error) => console.error('Ошибка при скачивании файла:', error));
-};
 
 export const VacancyMainScreen = () => {
+    const router = useRouter();
     const { filteredProcessModel, selectedProcessUser } = useSelectedVacancy();
+
+    const hasChat = !isNull(filteredProcessModel?.[0].chat);
+
+    const { handleCreateChat, chatInfo } = useCreateChatWithCandidate();
 
     const [download, { data }] = useLazyDownloadResumeQuery();
     const currentUser = filteredProcessModel?.find((el) => el.id === selectedProcessUser);
+
+    const onChatHandler = () => {
+        if (!filteredProcessModel) return;
+        handleCreateChat(filteredProcessModel?.[0]?.candidate.id);
+    };
+
+    useEffect(() => {
+        if (!chatInfo?.chat_id) return;
+
+        router.push(`/chats?chatId=${chatInfo?.chat_id}`);
+    }, [chatInfo?.chat_id]);
 
     return (
         <Paper w='100%' h='72vh' style={{ overflow: 'auto' }}>
@@ -91,18 +79,33 @@ export const VacancyMainScreen = () => {
                     <Contacts contacts={currentUser?.candidate?.info?.contacts} />
                     <Group mb='var(--size-xl)'>
                         <Button
-                            leftSection={<FileText weight='bold' size={20} />}
-                            onClick={() => {
-                                // downloadFile(currentUser?.candidate?.id ?? '');
-                                download(currentUser?.candidate?.id ?? '');
-                            }}
                             variant='light'
+                            leftSection={<FileText weight='bold' size={20} />}
+                            onClick={() => download(currentUser?.candidate?.id ?? '')}
                         >
                             Резюме
                         </Button>
-                        <Button bg='gray.2' c='black' leftSection={<ChatDots weight='bold' size={20} />}>
-                            В чат
-                        </Button>
+                        {hasChat && (
+                            <Button
+                                c='black'
+                                bg='gray.2'
+                                component={Link}
+                                href={`/chats?chatId=${filteredProcessModel[0].chat}`}
+                                leftSection={<ChatDots weight='bold' size={20} />}
+                            >
+                                В чат
+                            </Button>
+                        )}
+                        {!hasChat && (
+                            <Button
+                                c='black'
+                                bg='gray.2'
+                                onClick={onChatHandler}
+                                leftSection={<ChatDots weight='bold' size={20} />}
+                            >
+                                В чат
+                            </Button>
+                        )}
                     </Group>
                     <AISummary summary={currentUser?.candidate?.info?.ai_summary} />
                     <AIQuestions questions={currentUser?.candidate?.info?.personalized_questions} />

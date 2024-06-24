@@ -1,4 +1,4 @@
-import { Flex, Paper, Skeleton, Stack, Title } from '@mantine/core';
+import { Flex, Paper, Skeleton, Stack, Title, useMantineColorScheme } from '@mantine/core';
 
 import { VacancyCard } from '@/components/entities';
 import {
@@ -21,8 +21,11 @@ export const VacanciesBlock = () => {
         ? `${getDeclinations({ count: totalCount, few: 'Найдено', many: 'Найдено', one: 'Найдена', withoutCount: true })} ${getDeclinations({ count: totalCount, few: 'вакансий', many: 'вакансий', one: 'вакансия' })}`
         : null;
 
+    const { colorScheme } = useMantineColorScheme();
+    const isDarkMode = colorScheme === 'dark';
+
     return (
-        <Paper p='var(--size-xl)' radius='var(--size-md)'>
+        <Paper p='var(--size-xl)' radius='var(--size-md)' bg={isDarkMode ? 'dark.5' : 'white'}>
             <VacanciesTabTypes />
             <Flex gap={60}>
                 {tab !== 'my' && <VacanciesAsideFilters />}
@@ -48,7 +51,13 @@ export const VacanciesBlock = () => {
                                     <VacancyCard
                                         {...vacancy}
                                         key={vacancy.id}
-                                        actionSlot={<ApplyForJobButton vacancy_id={vacancy.id} />}
+                                        actionSlot={
+                                            <ApplyForJobButton
+                                                {...vacancy}
+                                                is_responded={vacancy.candidate_response?.is_responded ?? false}
+                                                vacancy_id={vacancy.id}
+                                            />
+                                        }
                                     />
                                 ))}
                             <SendVacancyProposal />
@@ -58,12 +67,17 @@ export const VacanciesBlock = () => {
                                     <VacancyCard
                                         {...vacancy}
                                         key={vacancy.id}
-                                        actionSlot={<ApplyForJobButton vacancy_id={vacancy.id} />}
+                                        actionSlot={
+                                            <ApplyForJobButton
+                                                {...vacancy}
+                                                is_responded={vacancy.candidate_response?.is_responded ?? false}
+                                                vacancy_id={vacancy.id}
+                                            />
+                                        }
                                     />
                                 ))}
                         </Stack>
                     </Skeleton>
-
                     <VacanciesPagination />
                 </Stack>
             </Flex>

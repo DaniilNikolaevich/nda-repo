@@ -23,15 +23,54 @@ from vacancies.serializers import VacancySerializer, SelectCandidateSerializer, 
 from vacancies.services import invite_candidate_for_interview
 
 
+@method_decorator([tryexcept, auth, log_action], name='dispatch')
+class CandidateRespondedVacancies(APIView):
+    def get(self, request, user, *args, **kwargs):
+
+        vacancies, vacancies_dict = user.get_responded_vacancies()
+
+        paginator = AbstractPaginator(
+            model=Vacancy,
+            model_serializer=VacancySerializer,
+            queryset=vacancies,
+            filter_instance=VacancyFilter,
+            context={"kwargs": kwargs, "user": user, "vacancies_dict": vacancies_dict},
+            request=request
+        )
+
+        try:
+            result = paginator.get_result(
+                search_list=[
+                    'tasks__icontains', 'additional_requirements__icontains', 'description__icontains',
+                    'position__name__icontains',
+                    'department__name__icontains'
+                ])
+        except BadRequestException as error:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                content=error.message
+            )
+        return Response(result)
+
+
 @method_decorator([tryexcept, log_action], name='dispatch')
 class CandidateVacancyView(APIView):
     def get(self, request, *args, **kwargs):
+
+        authorization = request.headers.get('Authorization')
+        if not authorization:
+            user = None
+            vacancies_dict = {}
+        else:
+            user = get_user_from_authorization_header(authorization)
+            _, vacancies_dict = user.get_responded_vacancies()
+
         paginator = AbstractPaginator(
             model=Vacancy,
             model_serializer=VacancySerializer,
             queryset=Vacancy.objects.filter(status=Vacancy.VacancyStatus.ACTIVE),
             filter_instance=VacancyFilter,
-            context={"kwargs": kwargs},
+            context={"kwargs": kwargs, "user": user, "vacancies_dict": vacancies_dict},
             request=request
         )
 
@@ -63,7 +102,16 @@ class CandidateVacancyDetailView(APIView):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        serializer = VacancySerializer(self.vacancy)
+        authorization = request.headers.get('Authorization')
+        if not authorization:
+            user = None
+            vacancies_dict = {}
+        else:
+            user = get_user_from_authorization_header(authorization)
+            _, vacancies_dict = user.get_responded_vacancies()
+
+        serializer = VacancySerializer(self.vacancy, context={"user": user, "vacancies_dict": vacancies_dict})
+        self.vacancy.increase_number_of_views()
         return Response(serializer.data)
 
 
@@ -533,8 +581,17 @@ class SimilarVacanciesView(APIView):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
+        authorization = request.headers.get('Authorization')
+        if not authorization:
+            user = None
+            vacancies_dict = {}
+        else:
+            user = get_user_from_authorization_header(authorization)
+            _, vacancies_dict = user.get_responded_vacancies()
+
         similar_vacancies = self.vacancy.get_similar_vacancies()
-        serializer = VacancySerializer(similar_vacancies, many=True)
+        serializer = VacancySerializer(similar_vacancies, many=True,
+                                       context={"user": user, "vacancies_dict": vacancies_dict})
         return Response(serializer.data)
 
 

@@ -10,7 +10,11 @@ import { ChatMessage } from '@/components/entities/ChatMessage';
 import { useGetChatHistoryQuery } from '@/services';
 import { ChatMessageModel, ChatModel } from '@/shared/types/common-models/Chat';
 
-export const ChatMessages = () => {
+interface ChatMessagesProps {
+    messageType: string;
+}
+
+export const ChatMessages = ({ messageType }: ChatMessagesProps) => {
     const {
         query: { chatId },
     } = useRouter();
@@ -23,6 +27,10 @@ export const ChatMessages = () => {
         if (!messages) return;
 
         const reduced = messages?.reduceRight((acc: Record<string, ChatMessageModel[]>, chat) => {
+            if (messageType === 'system' && chat.author) {
+                return acc;
+            }
+
             // Извлекаем дату из строки created_at, отбрасывая время и часовой пояс
             const date = chat.created_at!.split('T')[0]; // Получаем '2024-06-16'
 
@@ -36,7 +44,7 @@ export const ChatMessages = () => {
         }, {});
 
         setMessagesUpdatedList(reduced);
-    }, [messages]);
+    }, [messages, messageType]);
 
     useEffect(() => {
         const chatEl = document.querySelector<HTMLDivElement>('#chat-container');
@@ -58,7 +66,8 @@ export const ChatMessages = () => {
                     </Flex>
                     <Stack>
                         {messagesUpdatedList?.[key]?.map((message, index) => {
-                            const isEqualToPast = messagesUpdatedList[key][index - 1]?.author?.id === message.author.id;
+                            const isEqualToPast =
+                                messagesUpdatedList[key][index - 1]?.author?.id === message.author?.id;
 
                             return (
                                 <ChatMessage

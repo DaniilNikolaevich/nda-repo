@@ -1,7 +1,9 @@
-import { Group, Paper, Spoiler, Stack, Text } from '@mantine/core';
+import { Group, Paper, Spoiler, Stack, Text, useMantineColorScheme } from '@mantine/core';
 import { Sparkle } from '@phosphor-icons/react/dist/ssr/Sparkle';
 
 export const AISummary = ({ summary }: { summary?: string }) => {
+    const { colorScheme } = useMantineColorScheme();
+    const isDarkTheme = colorScheme === 'dark';
     if (!summary) return;
 
     return (
@@ -11,7 +13,7 @@ export const AISummary = ({ summary }: { summary?: string }) => {
             py='var(--size-sm)'
             px='var(--size-md)'
             radius='var(--size-md)'
-            bg='indigo.0'
+            bg={isDarkTheme ? 'dark.5' : 'indigo.0'}
         >
             <Stack>
                 <Text fw='bold'>

@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Anchor, Button, Flex, TextInput, Title } from '@mantine/core';
+import { useEffect, useState } from 'react';
+import { Anchor, Button, Flex, TextInput, Title, useMantineColorScheme } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import Link from 'next/link';
@@ -10,6 +10,8 @@ import { FormContainer } from '@/shared/ui';
 import { handleError } from '@/shared/utils';
 
 function RestorePage() {
+    const { colorScheme } = useMantineColorScheme();
+    const isDarkMode = colorScheme === 'dark';
     const [resetPassword, { isSuccess, data }] = useResetPasswordMutation();
     const form = useForm({
         mode: 'uncontrolled',
@@ -30,6 +32,8 @@ function RestorePage() {
         }
     });
 
+    const [background, setBackground] = useState('dark.4');
+
     useEffect(() => {
         if (isSuccess) {
             notifications.show({
@@ -38,9 +42,17 @@ function RestorePage() {
         }
     }, [isSuccess]);
 
+    useEffect(() => {
+        if (isDarkMode) {
+            return setBackground('dark.4');
+        }
+
+        setBackground('white');
+    }, []);
+
     return (
         <BaseLayout title='Восстановление пароля'>
-            <FormContainer centered maw={500} onSubmit={onSubmit}>
+            <FormContainer bg={background} centered maw={500} onSubmit={onSubmit}>
                 <Title order={2}>Восстановление пароля</Title>
                 <TextInput
                     label='E-mail'

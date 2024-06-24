@@ -1,3 +1,13 @@
+/* For light mode */
+:root[data-mantine-color-scheme="light"] {
+  --mantine-color-body: var(--mantine-color-gray-0) !important;
+}
+
+/* For dark mode */
+:root[data-mantine-color-scheme="dark"] {
+  --mantine-color-body: #282827 !important;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -10,7 +20,6 @@ html {
 body {
   padding: 0;
   font: var(--font-16);
-  background-color: var(--mantine-color-gray-0);
 }
 
 body > div:has(a[href="https://www.syncfusion.com/account/claim-license-key?pl=SmF2YVNjcmlwdA==&vs=MjY=&utm_source=es_license_validation_banner&utm_medium=listing&utm_campaign=license-information"])

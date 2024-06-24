@@ -1,7 +1,7 @@
-a.root {
+a.root h5 {
   transition: color 0.3s ease-in-out;
 }
 
-a.root:hover {
+a.root:hover h5 {
   color: var(--accent) !important;
 }

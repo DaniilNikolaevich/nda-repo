@@ -8,4 +8,3 @@ wsgi_app = "settings.wsgi"
 reload = True
 max_requests = 1000
 timeout = 120
-

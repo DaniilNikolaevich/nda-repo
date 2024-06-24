@@ -1,16 +1,17 @@
 import { useEffect } from 'react';
-import { Button, Flex, Menu, Text, Title } from '@mantine/core';
+import { Button, Flex, Menu, Text, Title, useMantineColorScheme } from '@mantine/core';
 import { CaretDown } from '@phosphor-icons/react/dist/ssr/CaretDown';
 import { ChatDots } from '@phosphor-icons/react/dist/ssr/ChatDots';
 import { isArray } from 'lodash-es';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { InviteApplicantForVacancy } from '@/components/features';
-import { useCreateChatByCandidateMutation, useGetChatByCandidateQuery, useSelectCandidateMutation } from '@/services';
+import { useGetChatByCandidateQuery } from '@/services';
 import { useCreateChatWithCandidate, useSelectCandidateForJob } from '@/services/RecruiterService/hooks';
 import { useGetAllVacanciesForRecruiterQuery } from '@/services/VacanciesService';
-import { ProfileInfoApplicantTypes } from '@/shared/types';
-import { contactsMapper } from '@/shared/utils';
+import type { ProfileInfoApplicantTypes } from '@/shared/types';
+import { contactsMapper, getLinkExternalType } from '@/shared/utils';
 
 export const ProfileApplicantContacts = ({ data }: { data?: ProfileInfoApplicantTypes }) => {
     const {
@@ -18,6 +19,9 @@ export const ProfileApplicantContacts = ({ data }: { data?: ProfileInfoApplicant
         query: { id },
     } = useRouter();
     const { handleSelectCandidate } = useSelectCandidateForJob();
+
+    const { colorScheme } = useMantineColorScheme();
+    const isDarkTheme = colorScheme === 'dark';
 
     const { data: vacancies } = useGetAllVacanciesForRecruiterQuery(
         {
@@ -50,7 +54,15 @@ export const ProfileApplicantContacts = ({ data }: { data?: ProfileInfoApplicant
     }, [chatInfo]);
 
     return (
-        <Flex p={20} gap={24} bg='white' miw={310} h='fit-content' direction='column' style={{ borderRadius: 16 }}>
+        <Flex
+            p={20}
+            gap={24}
+            bg={isDarkTheme ? 'dark.4' : 'white'}
+            miw={310}
+            h='fit-content'
+            direction='column'
+            style={{ borderRadius: 16 }}
+        >
             <Flex direction='column' gap={12}>
                 <Flex justify='space-between' align='center'>
                     <Title order={5}>Контакты</Title>
@@ -98,17 +110,18 @@ export const ProfileApplicantContacts = ({ data }: { data?: ProfileInfoApplicant
                                     value && (
                                         <Flex key={index} direction='column'>
                                             <Flex>
-                                                <Text style={{ fontSize: 14 }}>{contactsMapper(type)}:&nbsp;</Text>
-                                                <Text c='#4263EB' style={{ fontSize: 14 }}>
-                                                    {value}
-                                                </Text>
-                                                <Text style={{ fontSize: 14 }}>
-                                                    {is_preferred && <>&nbsp;–&nbsp;</>}
-                                                </Text>
+                                                <Text fz={14}>{contactsMapper(type)}:&nbsp;</Text>
+                                                <Link
+                                                    target='_blank'
+                                                    href={`${getLinkExternalType(type)}${contactsMapper(type) === 'Telegram' ? value.replace('@', '') : value}`}
+                                                >
+                                                    <Text c='indigo.8' fz={14}>
+                                                        {value}
+                                                    </Text>
+                                                </Link>
+                                                <Text fz={14}>{is_preferred && <>&nbsp;–&nbsp;</>}</Text>
                                             </Flex>
-                                            {is_preferred && (
-                                                <Text style={{ fontSize: 14 }}>предпочитаемый способ связи</Text>
-                                            )}
+                                            {is_preferred && <Text fz={14}>предпочитаемый способ связи</Text>}
                                         </Flex>
                                     )
                             )}

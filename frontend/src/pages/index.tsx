@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { Container, Flex, Grid, Paper, Title } from '@mantine/core';
+import { Container, Flex, Grid, Paper, Title, useMantineColorScheme } from '@mantine/core';
+import { useUnit } from 'effector-react';
 import type { GetServerSideProps } from 'next';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
@@ -9,7 +10,7 @@ import { PostCard } from '@/components/entities';
 import { EntitySearchBar, PostsFilterSelect, PostsPagination } from '@/components/features';
 import { EmailSubscription } from '@/components/widgets';
 import { BaseLayout } from '@/layouts';
-import { useAuthorization } from '@/services';
+import { $isAuth } from '@/services';
 import { API_ROUTES } from '@/shared/api';
 import { useIsLaptop } from '@/shared/hooks/media';
 import type { NewsModel } from '@/shared/types/common-models';
@@ -19,10 +20,10 @@ interface IndexPageProps {
 }
 
 function IndexPage({ news }: IndexPageProps) {
+    const isAuth = useUnit($isAuth);
     const { replace, pathname } = useRouter();
     const searchParams = useSearchParams();
     const isLaptop = useIsLaptop();
-    const [isAuth] = useAuthorization();
 
     useEffect(() => {
         const params = new URLSearchParams(searchParams);
@@ -42,18 +43,19 @@ function IndexPage({ news }: IndexPageProps) {
         replace(`${pathname}?${params.toString()}`);
     }, []);
 
+    const { colorScheme } = useMantineColorScheme();
+    const isDarkMode = colorScheme === 'dark';
+
     return (
-        <BaseLayout title='Главная'>
+        <BaseLayout title='PeopleFlow | Главная'>
             <section>
-                <Container>
-                    <Container>
-                        <Title order={2} mb='var(--size-lg)'>
-                            Популярные новости
-                        </Title>
-                    </Container>
+                <Container p={0}>
+                    <Title order={2} mb='var(--size-lg)' c={isDarkMode ? 'white' : 'black'}>
+                        Популярные новости
+                    </Title>
                     <Grid gutter='var(--size-lg)' pos='relative'>
                         <Grid.Col offset={isLaptop && isAuth ? 1 : 0} span={isLaptop ? 9 : 12}>
-                            <Paper p='var(--size-lg)'>
+                            <Paper pt={0} bg='transparent'>
                                 <Flex gap='var(--size-sm)' mb='var(--size-lg)'>
                                     <EntitySearchBar placeholder='Найти новость' />
                                     <PostsFilterSelect />
