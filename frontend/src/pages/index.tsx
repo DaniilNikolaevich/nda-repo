@@ -61,9 +61,7 @@ function IndexPage({ news }: IndexPageProps) {
                                     <PostsFilterSelect />
                                 </Flex>
                                 <Flex mb='var(--size-lg)' gap='var(--size-lg)' direction='column'>
-                                    {news.payload.map((article) => (
-                                        <PostCard key={article.id} {...article} />
-                                    ))}
+                                    {news?.payload?.map((article) => <PostCard key={article.id} {...article} />)}
                                 </Flex>
 
                                 <PostsPagination total={news.total_pages} />
@@ -88,8 +86,17 @@ export const getServerSideProps: GetServerSideProps<{
 }> = async ({ query, res }) => {
     res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
     const queries = queryString.stringify(query);
-    const fetchAllNews = await fetch(`${API_ROUTES.baseUrl}${API_ROUTES.news}?${queries}`);
-    const news = await fetchAllNews.json();
+
+    let news = {} as NewsModel;
+
+    try {
+        const fetchAllNews = await fetch(`${API_ROUTES.baseUrl}${API_ROUTES.news}?${queries}`);
+        news = await fetchAllNews.json();
+    } catch (e) {
+        if (e instanceof Error) {
+            console.error(e.message);
+        }
+    }
 
     return {
         props: {
