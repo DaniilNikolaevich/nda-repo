@@ -24,14 +24,15 @@ export function ChatProvider({ children }: PropsWithChildren) {
     const {
         query: { chatId },
     } = useRouter();
-    const token = STORAGE.getChatToken();
+    const chatToken = STORAGE.getChatToken();
+    const token = STORAGE.getToken();
     const { data: chats, isLoading } = useGetAllMyChatsQuery(undefined, {
-        skip: !token,
+        skip: !chatToken || !token,
         pollingInterval: 10_000,
     });
     const { data: messagesCounter } = useGetNotificationsQuery(undefined, {
         pollingInterval: 10_000,
-        skip: !token,
+        skip: !chatToken || !token,
     });
 
     const [messageType, setMessageType] = useState<string>('all');
@@ -57,10 +58,10 @@ export function ChatProvider({ children }: PropsWithChildren) {
     );
 
     useEffect(() => {
-        if (!token || !chatId || isArray(chatId)) return;
+        if (!chatToken || !chatId || isArray(chatId)) return;
 
         const client = new Centrifuge(API_ROUTES.ws_chat, {
-            token: token ?? '',
+            token: chatToken ?? '',
         });
         const sub = client.newSubscription(chatId);
 
@@ -71,7 +72,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
         client.connect();
 
         return () => client.disconnect();
-    }, [chatId, token]);
+    }, [chatId, chatToken]);
 
     return <ChatCtx.Provider value={memoizedValues}>{children}</ChatCtx.Provider>;
 }
